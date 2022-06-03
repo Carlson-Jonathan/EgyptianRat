@@ -27,7 +27,7 @@ public:
 		// background.setOrigin(0, 0);	
 
 		// Play song
-		gameSound.loadAndPlayMusic(defaultMusic);
+		// gameSound.loadAndPlayMusic(defaultMusic);
 		setFontFamily();
 	}
 
@@ -38,7 +38,7 @@ public:
 	
 	short frameRate = 20;
 	short gameSpeed	= 4;
-	short numberOfPlayers = 6;
+	short numberOfPlayers = 4;
 
 	string defaultMusic      = "Sounds/Music/TownTheme.ogg";
 	string defaultFontFamily = "Fonts/Robusta-Regular.ttf";
