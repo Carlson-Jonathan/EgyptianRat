@@ -28,14 +28,7 @@ public:
     
 private:
 
-    short faceupCards = 0;
     short timeElapsed = 0;
-    short tieRound = 0;
-    short tieBreakerIndex = 1;
-    short placementDelay = 150;
-    short resultsDelay = 1000;
-    short conclusionDelay = 3000;
-    short tieDelay = 2500;
 
     string cardBack = "redCardBack";
     Initializer* globalData;
@@ -44,37 +37,17 @@ private:
 
     vector<shared_ptr<Player>> playerList;
     vector<pair<float, float>> cardPositions;
-    vector<shared_ptr<Player>> winnerPool;
     vector<shared_ptr<Card>>   prizePot;
     vector<sf::RectangleShape> greenRectangles;
     vector<sf::Text>           deckSizeNumbers;
-    vector<sf::Text>           winnerText;
-    vector<sf::Text>           tieText;
 
-    bool mayClick                  = true;
-    bool mayStartNewRound          = false;
-    bool allPlayersPlayedACard     = false;
-    bool mayDeclareRoundResults    = false;
-    bool hiPlayersNotYetDetermined = false;
-    bool mayDisplayWinnerText      = false;
-    bool mayDisplayTieText         = false;
-    bool isATie                    = false;
-    bool mayBreakTie               = false;
-    bool mayConcludeRound          = false;
-    bool gameOver                  = false;
-    bool buttonIsHeld              = false;
+    bool buttonIsHeld = false;
 
     vector<pair<float, float>> deckSizeTextPositions = {
         {100.f, 108.f}, // Player 1
         {250.f, 108.f}, // Player 2
         {400.f, 108.f}, // Player 3
         {100.f, 643.f}, // Player 4
-        {250.f, 643.f}, // Player 5
-        {400.f, 643.f}  // Player 6
-    };
-
-    pair<pair<float, float>, pair<float, float>> const cardClickArea = {
-        {50, 150}, {37, 183}
     };
 
     pair<pair<float, float>, pair<float, float>> gearIconClickArea = {
@@ -82,7 +55,6 @@ private:
     };    
 
 	sf::Font  font; 
-    sf::Text  headingText;
     sf::Clock clock;
     sf::Time  elapsed; 
     sf::Sprite gearMenuIcon;
@@ -103,7 +75,6 @@ private:
     void draw_AllTableSprites();
 
     void listen_ForMouseClicks();
-    void listener_CardWasClicked(float x, float y);
     void listener_GearMenuIconClick(float x, float y);
     void listener_MenuEventMonitor();
 
@@ -115,29 +86,10 @@ private:
     void verifyNumberOfPlayers();
     void generatePlayers();
     void dealCardsToPlayers();  
-    vector<short> getActivePlayerIndecies();
 
-    void activateGameRound();
-    void revealFaceUpCardsWithDelayOf(short delay);
-    void drawPlayerFaceUpCards();
     void adjustDeckSizeNumber(shared_ptr<Player> player);
 
-    short getHighestCardValuePlayed(vector<shared_ptr<Player>> competingPlayers, short ith_card);
-    void fillWinnerPool(vector<shared_ptr<Player>> competingPlayers, short ith_card);
-    void declareRoundResults();
-    void determineWinnerOrTie();
-    void breakTie();
-    void breakTieOnLastCard(shared_ptr<Player> player);
-    void playTieBreakerCard(shared_ptr<Player> player);
-
-    void gatherPlayedCards();
     void popPlayedCardsFromPlayerDecks();
-    void awardPrizePotToVictor();
-    void concludeRound();
-    void clearFaceUpCards();
-    void resetRoundVariables();
-    void removeDefeatedPlayers();
-    void checkForGameWinner();
 
     void printAllPlayerStats();
     void printAllBooleanPermissions();
@@ -229,11 +181,6 @@ void GameTable::set_GameSpeed(short speed) {
     short resultsDelay[]    = {237, 316,  422,  563,  750, 1000, 1300, 1690, 2197, 2856};
     short conclusionDelay[] = {712, 949, 1266, 1688, 2250, 3000, 3900, 5070, 6591, 8568};
     short tieDelay[]        = {474, 632,  843, 1125, 1500, 2000, 2600, 3380, 4394, 5712};
-
-    this->placementDelay  = placementDelay[speed];
-    this->resultsDelay    = resultsDelay[speed];
-    this->conclusionDelay = conclusionDelay[speed];
-    this->tieDelay        = tieDelay[speed];
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -268,36 +215,13 @@ void GameTable::set_DeckSizeText() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::set_VictoryText() {
-
-    for(short i = 0; i < numberOfPlayers; i++) {
-        winnerText.push_back(sf::Text());
-        winnerText[i].setFont(font); 
-        winnerText[i].setCharacterSize(70); 
-        winnerText[i].setFillColor(sf::Color(60, 210, 60));
-        winnerText[i].setString("Winner");
-
-        tieText.push_back(sf::Text());
-        tieText[i].setFont(font);
-        tieText[i].setCharacterSize(70);
-        tieText[i].setFillColor(sf::Color::Cyan);
-        tieText[i].setString("Tie");
-
-        Miscellaneous::centerTextAlignment(winnerText[i]);
-        Miscellaneous::centerTextAlignment(tieText[i]);
-
-        winnerText[i].setPosition(sf::Vector2f(-cardPositions[i].first  + 50.f, 
-                                               -cardPositions[i].second + 72.f));  
-
-        tieText[i].setPosition(sf::Vector2f(-cardPositions[i].first  + 50.f, 
-                                            -cardPositions[i].second + 72.f));   
-    }
 }
 
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::verifyNumberOfPlayers() {
-    if(numberOfPlayers < 2 || numberOfPlayers > 6) {
-        cout << "ERROR: GameTable::numberOfPlayers: Out of range. Value must be 2-6." << endl;
+    if(numberOfPlayers < 2 || numberOfPlayers > 4) {
+        cout << "ERROR: GameTable::numberOfPlayers: Out of range. Value must be 2-4." << endl;
         exit(139);
     }
 }
@@ -333,15 +257,10 @@ void GameTable::listen_ForMouseClicks() {
 
     if(leftClick()) {
         listener_GearMenuIconClick (mouseX, mouseY);
-        listener_CardWasClicked    (mouseX, mouseY);
+        cout << "Left mouse button clicked!" << endl;
     }
 
     if(leftRelease()) {
-    }
-
-    if(globalData->autoClick && mayClick) {
-        mayStartNewRound = true;
-        mayClick = false;
     }
 }
 
@@ -369,20 +288,6 @@ bool GameTable::leftRelease() {
 
 // -------------------------------------------------------------------------------------------------
 
-void GameTable::listener_CardWasClicked(float x, float y) {
-    bool xBegin = x > cardClickArea.first.first;
-    bool xEnd   = x < cardClickArea.first.second;
-    bool yBegin = y > cardClickArea.second.first;
-    bool yEnd   = y < cardClickArea.second.second;
-
-    if(xBegin && xEnd && yBegin && yEnd) {
-        mayStartNewRound = true;
-        globalData->gameSound.playSoundEffect("tClick.ogg");
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
 void GameTable::listener_GearMenuIconClick(float x, float y) {
 
     bool xBegin = x > gearIconClickArea.first.first;
@@ -400,262 +305,6 @@ void GameTable::listener_GearMenuIconClick(float x, float y) {
 // ======================================== Game Mechanics =========================================
 // =================================================================================================
 
-void GameTable::activateGameRound() {
-    timeElapsed = clock.getElapsedTime().asMilliseconds();
-
-    if(mayStartNewRound) revealFaceUpCardsWithDelayOf(placementDelay);
-    if(allPlayersPlayedACard && hiPlayersNotYetDetermined) determineWinnerOrTie();
-    if(mayDeclareRoundResults && timeElapsed > resultsDelay) declareRoundResults();
-    if(mayBreakTie) breakTie();
-    if(mayConcludeRound && timeElapsed > conclusionDelay) concludeRound();
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::concludeRound() {
-    mayConcludeRound = false;
-    mayDisplayWinnerText = false;
-    gatherPlayedCards();
-    awardPrizePotToVictor();
-    clearFaceUpCards();
-    resetRoundVariables();
-    removeDefeatedPlayers();
-    checkForGameWinner();
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::checkForGameWinner() {
-    short numPlayersStillInGame;
-    for(auto i : playerList) {
-        if(!i->isOutOfGame) 
-            numPlayersStillInGame++;
-    }
-    if(numPlayersStillInGame == 1)
-        gameOver = true;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::removeDefeatedPlayers() {
-    vector<short> activePlayersIndecies = getActivePlayerIndecies();
-    for(short i = 0; i < activePlayersIndecies.size(); i++) {
-        shared_ptr<Player> player = playerList[activePlayersIndecies[i]];
-        if(player->numCardsInHand < 1 && !player->isOutOfGame) {
-            player->isOutOfGame = true;
-        }
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::gatherPlayedCards() {
-    short cardsPlayed = 0;
-    short totalCards = 0;
-
-    for(short i = 0; i < numberOfPlayers; i++) {
-        if(playerList[i]->isOutOfGame)
-            continue;
-        
-        cardsPlayed = playerList[i]->hand.size() - playerList[i]->numCardsInHand;
-        for(int j = 0; j < cardsPlayed; j++) {
-            prizePot.push_back(playerList[i]->hand[0]);
-            playerList[i]->hand.erase(playerList[i]->hand.begin());
-        }
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::awardPrizePotToVictor() {
-    shared_ptr<Player> winner = winnerPool[0];
-    for(auto & i : prizePot) {
-        i->cardSprite.setOrigin(cardPositions[winner->number - 1].first, cardPositions[winner->number - 1].second);
-        winner->hand.push_back(i);
-    }
-    winner->numCardsInHand = winner->hand.size();
-    deckSizeNumbers[winner->number - 1].setString(to_string(winner->numCardsInHand));
-    Miscellaneous::centerTextAlignment(deckSizeNumbers[winner->number - 1]);
-    prizePot = {};
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::clearFaceUpCards() {
-    allPlayersPlayedACard = false;
-    faceupCards = 0;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::resetRoundVariables() {
-
-    // Set player cards to display first card
-    for(short i = 0; i < numberOfPlayers; i++) {
-        if(playerList[i]->isOutOfGame)
-            continue;
-
-        playerList[i]->topCard = playerList[i]->hand[0];
-    }
-
-    mayClick = true;
-    tieBreakerIndex = 1;
-    tieRound = 0;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::determineWinnerOrTie() {
-    if(isATie)
-        fillWinnerPool(winnerPool, tieBreakerIndex++); 
-    else
-        fillWinnerPool(playerList, 0); 
-
-    if(winnerPool.size() > 1) {
-        isATie = true;
-        tieRound++;
-    }
-    else
-        isATie = false;
-
-    hiPlayersNotYetDetermined = false;
-    mayDeclareRoundResults = true;
-    clock.restart();
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::declareRoundResults() {
-    if(isATie) {
-        globalData->gameSound.playSoundEffect("tie.ogg");
-        mayDisplayTieText = true;
-        mayBreakTie = true;
-    }
-    else {
-        globalData->gameSound.playSoundEffect("winner.ogg");
-        mayDisplayWinnerText = true;
-        mayConcludeRound = true;
-    }
-
-    mayDeclareRoundResults = false;
-    clock.restart();
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::breakTie() {
-
-    // Called when a player ties on their last card and cannot break it with another card.
-    for(short i = 0; i < winnerPool.size(); i++) {
-        if(!winnerPool[i]->numCardsInHand) { 
-            winnerPool.erase(winnerPool.begin() + i);
-
-            if(winnerPool.size() == 1) {
-                mayDisplayTieText = false;
-                mayDeclareRoundResults = true;
-                isATie = false;
-                mayBreakTie = false;
-                return;
-            }
-        }
-    }
-
-    // Default tie breaker. Iterates tie player's card to next in hand, then send back through loop.
-    static short delay = tieDelay;
-    if(timeElapsed > delay) {
-        mayDisplayTieText = false;
-        static short nextWinnerIndex = 0;
-        playTieBreakerCard(winnerPool[nextWinnerIndex++]);
-        delay = tieDelay / 10;
-
-        if(nextWinnerIndex >= winnerPool.size()) {
-            nextWinnerIndex = 0;
-            delay = tieDelay;
-            mayBreakTie = false;
-            hiPlayersNotYetDetermined = true;
-        }
-
-    clock.restart();
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::breakTieOnLastCard(shared_ptr<Player> player) {
-    cout << player->name << " played their last card and it was a tie! (Please don't crash!)" << endl;
-    printAllPlayerStats();
-
-    // Strip player from winnerPool
-    for(short i = 0; i < winnerPool.size(); i++) {
-        if(winnerPool[i]->number = player->number)
-            winnerPool.erase(winnerPool.begin() + i);
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::playTieBreakerCard(shared_ptr<Player> player) {
-    adjustDeckSizeNumber(player);
-    short ith_card = tieRound;
-    player->topCard = player->hand[ith_card]; 
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::fillWinnerPool(vector<shared_ptr<Player>> competingPlayers, short ith_card) {
-    winnerPool = {};
-    short highestCard = getHighestCardValuePlayed(competingPlayers, ith_card);
-
-    for(short i = 0; i < competingPlayers.size(); i++) {
-        if(competingPlayers[i]->isOutOfGame)
-            continue;
-
-        short currentCard = competingPlayers[i]->hand[ith_card]->value;
-        if(currentCard == highestCard) {
-            winnerPool.push_back(competingPlayers[i]);
-        }
-    }    
-}
-
-// -------------------------------------------------------------------------------------------------
-
-short GameTable::getHighestCardValuePlayed(vector<shared_ptr<Player>> competingPlayers, short ith_card) {
-    short highestCard = 0;
-
-    for(short i = 0; i < competingPlayers.size(); i++) {
-        if(competingPlayers[i]->isOutOfGame)
-            continue;
-
-        short currentCard = competingPlayers[i]->hand[ith_card]->value;
-        if(currentCard > highestCard)
-            highestCard = currentCard;
-    }
-
-    return highestCard;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::revealFaceUpCardsWithDelayOf(short delay) {
-    vector<short> activePlayerIndecies = getActivePlayerIndecies();
-
-    // Stops this function from repeating after x loops.
-    if(faceupCards >= activePlayerIndecies.size()) {
-        hiPlayersNotYetDetermined = true;
-        mayStartNewRound = false;
-        allPlayersPlayedACard = true;
-    }
-
-    // Do the animation of placing cards as long as less than x cards have been placed.
-    if(elapsed.asMilliseconds() > delay && faceupCards < activePlayerIndecies.size()) {
-        faceupCards++;
-        shared_ptr<Player> currentPlayer = playerList[activePlayerIndecies[faceupCards - 1]];
-        clock.restart();
-        adjustDeckSizeNumber(currentPlayer);
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
 
 void GameTable::adjustDeckSizeNumber(shared_ptr<Player> player) {
     player->numCardsInHand--;
@@ -670,30 +319,8 @@ void GameTable::adjustDeckSizeNumber(shared_ptr<Player> player) {
 
 // -------------------------------------------------------------------------------------------------
 
-void GameTable::drawPlayerFaceUpCards() {
-    vector<short> activePlayerIndecies = getActivePlayerIndecies();
-    for(short i = 0; i < faceupCards; i++) {
-        if(i < activePlayerIndecies.size()) 
-            globalData->window.draw(playerList[activePlayerIndecies[i]]->topCard->cardSprite);
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-vector<short> GameTable::getActivePlayerIndecies() {
-    vector<short> activePlayerIndecies = {};
-    for(auto i : playerList)
-        if(!i->isOutOfGame)
-            activePlayerIndecies.push_back(i->number - 1);
-    return activePlayerIndecies;
-}
-
-// -------------------------------------------------------------------------------------------------
-
 void GameTable::draw_CardsBacks() {
     for(short i = 0; i < numberOfPlayers; i++) {
-
-        vector<short> activePlayerIndecies = getActivePlayerIndecies();
         
         if(playerList[i]->numCardsInHand > 0)
             globalData->window.draw(cardDeck.cardBacks[i]);
@@ -721,15 +348,6 @@ void GameTable::draw_DeckSizeNumbers() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::gameTableLoop() {
-        if(!gameOver) 
-            activateGameRound();
-        else {
-            vector<short> winner = getActivePlayerIndecies();
-            deckSizeNumbers[winner[0]].setString("  Winner!\nGame Over");
-            deckSizeNumbers[winner[0]].setFillColor(sf::Color::Blue);
-            Miscellaneous::centerTextAlignment(deckSizeNumbers[winner[0]]);
-        }
-
         draw_AllTableSprites();
         listen_ForMouseClicks();
         listener_MenuEventMonitor();
@@ -741,16 +359,7 @@ void GameTable::draw_AllTableSprites() {
     draw_GreenRectangles();
     draw_CardsBacks();
     draw_DeckSizeNumbers();
-    drawPlayerFaceUpCards();
     globalData->window.draw(gearMenuIcon);
-
-    if(mayDisplayWinnerText) globalData->window.draw(winnerText[winnerPool[0]->number - 1]);
-
-    if(mayDisplayTieText) {
-        for(short i = 0; i < winnerPool.size(); i++) {
-            globalData->window.draw(tieText[winnerPool[i]->number - 1]);
-        }
-    }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -791,16 +400,7 @@ void GameTable::printAllPlayerStats() {
 
 void GameTable::printAllBooleanPermissions() {
     cout << "============= Booleans =============" << endl;
-    cout << "mayStartNewRound: "          << mayStartNewRound          << endl;
-    cout << "mayClick: "                  << mayClick                  << endl;
-    cout << "allPlayersPlayedACard: "     << allPlayersPlayedACard     << endl;    
-    cout << "mayDeclareRoundResults: "    << mayDeclareRoundResults    << endl;   
-    cout << "hiPlayersNotYetDetermined: " << hiPlayersNotYetDetermined << endl; 
-    cout << "mayDisplayWinnerText: "      << mayDisplayWinnerText      << endl;
-    cout << "mayDisplayTieText: "         << mayDisplayTieText         << endl;
-    cout << "isATie: "                    << isATie                    << endl;
-    cout << "mayBreakTie: "               << mayBreakTie               << endl;
-    cout << "mayConcludeRound: "          << mayConcludeRound          << endl;
+    // cout << "mayConcludeRound: "          << mayConcludeRound          << endl;
 }
 
 // -------------------------------------------------------------------------------------------------
