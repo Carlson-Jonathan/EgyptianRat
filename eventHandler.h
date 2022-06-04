@@ -16,17 +16,19 @@ class EventHandler {
 public:
 
 	EventHandler() {}
-	EventHandler(sf::RenderWindow & window, unsigned int & screenWidth, unsigned int & screenHeight);
+	EventHandler(sf::RenderWindow & window);
 
 	void listen();
 
 	bool mouseRelease = false;
+	bool windowResized = false;
+
+	unsigned int screenWidth = 0;
+	unsigned int screenHeight = 0;
 
 private:
 
 	sf::RenderWindow* window;
-	unsigned int*  	  screenWidth;
-	unsigned int*     screenHeight;
 	sf::Event 	 	  event;
 	Joystick 		  joystick;
 
@@ -39,11 +41,8 @@ private:
 // =================================================================================================
 
 
-EventHandler::EventHandler(sf::RenderWindow & window, unsigned int & screenWidth, 
-						   unsigned int & screenHeight) {
+EventHandler::EventHandler(sf::RenderWindow & window) {
 	this->window = &window;
-	this->screenWidth = &screenWidth;
-	this->screenHeight = &screenHeight;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -113,10 +112,11 @@ void EventHandler::closeWindow() {
 // -------------------------------------------------------------------------------------------------
 
 void EventHandler::resizeWindow() {
-	screenWidth  = &event.size.width;
-	screenHeight = &event.size.height;
-	sf::FloatRect visibleArea(0, 0, *screenWidth, *screenHeight);
+	this->screenWidth = event.size.width;
+	this->screenHeight = event.size.height;
+	sf::FloatRect visibleArea(0, 0, screenWidth, screenHeight);
 	window->setView(sf::View(visibleArea));
+	windowResized = true;
 }
 
 #endif // EVENTHANDLER_H

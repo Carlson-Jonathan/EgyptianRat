@@ -77,6 +77,7 @@ private:
     void listen_ForMouseClicks();
     void listener_GearMenuIconClick(float x, float y);
     void listener_MenuEventMonitor();
+    void listener_WindowResized();
 
     bool leftClick();
     bool leftRelease();
@@ -163,10 +164,6 @@ void GameTable::set_CardBackPositions() {
     float yCenter = globalData->screenCenter.second;
 
     cardDeck.cardBacks[0].setOrigin(-xCenter + 250.f, -yCenter + 72.f);  
-
-    cout << "Cardback[0] origin = {" << cardDeck.cardBacks[0].getOrigin().x << ", " << 
-        cardDeck.cardBacks[0].getOrigin().y << "} " << endl;
-
     cardDeck.cardBacks[1].setOrigin(-xCenter +  50.f, -yCenter + 300.f);   
     cardDeck.cardBacks[2].setOrigin(-xCenter - 150.f, -yCenter +  72.f);   
     cardDeck.cardBacks[3].setOrigin(-xCenter +  50.f, -yCenter - 155.f);
@@ -292,6 +289,18 @@ bool GameTable::leftRelease() {
 
 // -------------------------------------------------------------------------------------------------
 
+void GameTable::listener_WindowResized() {
+    if(globalData->eventHandler.windowResized) {
+        globalData->screenWidth = globalData->eventHandler.screenWidth;
+        globalData->screenHeight = globalData->eventHandler.screenHeight;
+        globalData->setScreenCenter();
+        set_CardBackPositions(); 
+        globalData->eventHandler.windowResized = false;
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+
 void GameTable::listener_GearMenuIconClick(float x, float y) {
 
     bool xBegin = x > gearIconClickArea.first.first;
@@ -352,9 +361,10 @@ void GameTable::draw_DeckSizeNumbers() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::gameTableLoop() {
-        draw_AllTableSprites();
         listen_ForMouseClicks();
         listener_MenuEventMonitor();
+        listener_WindowResized();
+        draw_AllTableSprites();
 }
 
 // -------------------------------------------------------------------------------------------------
