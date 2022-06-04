@@ -65,9 +65,9 @@ private:
     void set_CardPositions();
     void set_CardBackPositions();
     void set_DeckSizeText();
+    void set_DeckSizeTextPositions();
     void set_GreenRectangles();
     void set_GameSpeed(short speed);
-    void set_VictoryText();
 
     void draw_CardsBacks();
     void draw_GreenRectangles();
@@ -121,7 +121,6 @@ void GameTable::construct(Initializer & globalData) {
     set_GameSpeed(globalData.gameSpeed);
     set_CardPositions();
     set_CardBackPositions();
-    set_VictoryText();
     set_GreenRectangles();
     set_DeckSizeText();
 }
@@ -159,7 +158,6 @@ void GameTable::set_CardPositions() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::set_CardBackPositions() {
-
     float xCenter = globalData->screenCenter.first;
     float yCenter = globalData->screenCenter.second;
 
@@ -207,15 +205,23 @@ void GameTable::set_DeckSizeText() {
         deckSizeNumbers[i].setCharacterSize(50); 
         deckSizeNumbers[i].setFillColor(sf::Color(255, 255, 255));
         deckSizeNumbers[i].setString(to_string(playerList[i]->numCardsInHand));
-        Miscellaneous::centerTextAlignment(deckSizeNumbers[i]);
-        deckSizeNumbers[i].setPosition(sf::Vector2f(deckSizeTextPositions[i].first, 
-                                                    deckSizeTextPositions[i].second));     
     }
+
+    set_DeckSizeTextPositions();
 }
 
 // -------------------------------------------------------------------------------------------------
 
-void GameTable::set_VictoryText() {
+void GameTable::set_DeckSizeTextPositions() {
+    float xCenter = globalData->screenCenter.first;
+    float yCenter = globalData->screenCenter.second;
+
+    for(short i = 0; i < numberOfPlayers; i++) {
+        sf::FloatRect textRect = deckSizeNumbers[i].getLocalBounds();
+        Miscellaneous::centerTextAlignment(deckSizeNumbers[i]);
+        deckSizeNumbers[i].setOrigin(cardDeck.cardBacks[i].getOrigin().x - 50 + textRect.width / 2.f, 
+                                     cardDeck.cardBacks[i].getOrigin().y - 38);
+    }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -295,6 +301,7 @@ void GameTable::listener_WindowResized() {
         globalData->screenHeight = globalData->eventHandler.screenHeight;
         globalData->setScreenCenter();
         set_CardBackPositions(); 
+        set_DeckSizeTextPositions();
         globalData->eventHandler.windowResized = false;
     }
 }
@@ -372,7 +379,7 @@ void GameTable::gameTableLoop() {
 void GameTable::draw_AllTableSprites() {
     // draw_GreenRectangles();
     draw_CardsBacks();
-    // draw_DeckSizeNumbers();
+    draw_DeckSizeNumbers();
     globalData->window.draw(gearMenuIcon);
 }
 
