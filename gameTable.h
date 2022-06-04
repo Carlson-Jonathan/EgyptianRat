@@ -67,6 +67,7 @@ private:
     void set_DeckSizeText();
     void set_DeckSizeTextPositions();
     void set_GreenRectangles();
+    void set_GreenRectanglePositions();
     void set_GameSpeed(short speed);
 
     void draw_CardsBacks();
@@ -148,7 +149,7 @@ void GameTable::set_CardPositions() {
     };
 
     // Apply screen positions to player card decks
-    for(short i = 0; i < numberOfPlayers; i++) {
+    for(short i = 0; i < 4; i++) {
         for(short j = 0; j < playerList[i]->hand.size(); j++) {
             playerList[i]->hand[j]->cardSprite.setOrigin(cardPositions[i].first, cardPositions[i].second);
         }
@@ -185,21 +186,31 @@ void GameTable::set_GameSpeed(short speed) {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::set_GreenRectangles() {
-    for(short i = 0; i < numberOfPlayers; i++) {
+    for(short i = 0; i < 4; i++) {
         sf::RectangleShape greenRectangle;
         greenRectangle.setSize(sf::Vector2f(60.f, 93.f));
         greenRectangle.setFillColor(sf::Color(0.f, 90.f, 0.f));
         greenRectangle.setOutlineColor(sf::Color(100.f, 150.f, 100.f));
         greenRectangle.setOutlineThickness(8.f);
-        greenRectangle.setOrigin(cardPositions[i].first - 20,  cardPositions[i].second - 25);
         greenRectangles.push_back(greenRectangle);
+    }
+
+    set_GreenRectanglePositions();
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void GameTable::set_GreenRectanglePositions() {
+    for(short i = 0; i < 4; i++) {
+        greenRectangles[i].setOrigin(cardDeck.cardBacks[i].getOrigin().x - 21, 
+                                     cardDeck.cardBacks[i].getOrigin().y - 26);        
     }
 }
 
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::set_DeckSizeText() {
-    for(short i = 0; i < numberOfPlayers; i++) {
+    for(short i = 0; i < 4; i++) {
         deckSizeNumbers.push_back(sf::Text());
         deckSizeNumbers[i].setFont(font); 
         deckSizeNumbers[i].setCharacterSize(50); 
@@ -213,12 +224,8 @@ void GameTable::set_DeckSizeText() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::set_DeckSizeTextPositions() {
-    float xCenter = globalData->screenCenter.first;
-    float yCenter = globalData->screenCenter.second;
-
-    for(short i = 0; i < numberOfPlayers; i++) {
+    for(short i = 0; i < 4; i++) {
         sf::FloatRect textRect = deckSizeNumbers[i].getLocalBounds();
-        Miscellaneous::centerTextAlignment(deckSizeNumbers[i]);
         deckSizeNumbers[i].setOrigin(cardDeck.cardBacks[i].getOrigin().x - 50 + textRect.width / 2.f, 
                                      cardDeck.cardBacks[i].getOrigin().y - 38);
     }
@@ -236,7 +243,7 @@ void GameTable::verifyNumberOfPlayers() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::generatePlayers() {
-    for(short i = 0; i < numberOfPlayers; i++) {
+    for(short i = 0; i < 4; i++) {
         playerList.push_back(make_shared<Player>());
         playerList[i]->number = i + 1;
         playerList[i]->name = "Player " + to_string(i + 1);
@@ -302,6 +309,7 @@ void GameTable::listener_WindowResized() {
         globalData->setScreenCenter();
         set_CardBackPositions(); 
         set_DeckSizeTextPositions();
+        set_GreenRectanglePositions();
         globalData->eventHandler.windowResized = false;
     }
 }
@@ -377,7 +385,7 @@ void GameTable::gameTableLoop() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::draw_AllTableSprites() {
-    // draw_GreenRectangles();
+    draw_GreenRectangles();
     draw_CardsBacks();
     draw_DeckSizeNumbers();
     globalData->window.draw(gearMenuIcon);
@@ -395,7 +403,7 @@ void GameTable::listener_MenuEventMonitor() {
 void GameTable::changeCardStyle() {
     if(cardBack != globalData->cardBack) {
         cardBack = globalData->cardBack;
-        cardDeck.generateCardBacks(numberOfPlayers);
+        cardDeck.generateCardBacks(4);
         set_CardBackPositions();
     }
 }

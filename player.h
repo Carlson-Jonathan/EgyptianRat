@@ -20,7 +20,7 @@ public:
     string  name        = "Unset";
     short   number      = 0;
     bool    isOutOfGame = false;
-    short   numCardsInHand;
+    short   numCardsInHand = 0;
 
     vector<shared_ptr<Card>> hand;
     shared_ptr<Card> topCard;
