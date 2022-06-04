@@ -141,12 +141,10 @@ void GameTable::set_CardPositions() {
     yMid = -(globalData->screenHeight / 2.0);
 
     cardPositions = { 
-        {xMid + 200.0, yMid + 170.0}, // Player 1
+        {xMid + 300.0, yMid +  72.0}, // Player 1
         {xMid +  50.0, yMid + 170.0}, // Player 2
-        {xMid - 100.0, yMid + 170.0}, // Player 3
-        {xMid + 200.0, yMid - 25.0},  // Player 4
-        {xMid +  50.0, yMid - 25.0},  // Player 5
-        {xMid - 100.0, yMid - 25.0}   // Player 6
+        {xMid - 300.0, yMid +  72.0}, // Player 3
+        {xMid +  50.0, yMid - 170.0}, // Player 4
     };
 
     // Apply screen positions to player card decks
@@ -160,12 +158,18 @@ void GameTable::set_CardPositions() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::set_CardBackPositions() {
-    cardDeck.cardBacks[0].setOrigin(xMid + 200.f, yMid + 340.f);              
-    cardDeck.cardBacks[1].setOrigin(xMid +  50.f, yMid + 340.f);   
-    cardDeck.cardBacks[2].setOrigin(xMid - 100.f, yMid + 340.f);   
-    cardDeck.cardBacks[3].setOrigin(xMid + 200.f, yMid - 195.f);
-    cardDeck.cardBacks[4].setOrigin(xMid +  50.f, yMid - 195.f);
-    cardDeck.cardBacks[5].setOrigin(xMid - 100.f, yMid - 195.f);
+
+    float xCenter = globalData->screenCenter.first;
+    float yCenter = globalData->screenCenter.second;
+
+    cardDeck.cardBacks[0].setOrigin(-xCenter + 250.f, -yCenter + 72.f);  
+
+    cout << "Cardback[0] origin = {" << cardDeck.cardBacks[0].getOrigin().x << ", " << 
+        cardDeck.cardBacks[0].getOrigin().y << "} " << endl;
+
+    cardDeck.cardBacks[1].setOrigin(-xCenter +  50.f, -yCenter + 300.f);   
+    cardDeck.cardBacks[2].setOrigin(-xCenter - 150.f, -yCenter +  72.f);   
+    cardDeck.cardBacks[3].setOrigin(-xCenter +  50.f, -yCenter - 155.f);
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -356,9 +360,9 @@ void GameTable::gameTableLoop() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::draw_AllTableSprites() {
-    draw_GreenRectangles();
+    // draw_GreenRectangles();
     draw_CardsBacks();
-    draw_DeckSizeNumbers();
+    // draw_DeckSizeNumbers();
     globalData->window.draw(gearMenuIcon);
 }
 

@@ -33,8 +33,9 @@ public:
 
     //----------------------------------------------------------------------------------------------
 
-	unsigned int screenWidth  = 500;
-	unsigned int screenHeight = 750;
+	unsigned int screenWidth  = 600;
+	unsigned int screenHeight = 700;
+	pair<float, float> screenCenter = {screenWidth / 2.f, screenHeight / 2.f};
 	
 	short frameRate = 20;
 	short gameSpeed	= 4;
