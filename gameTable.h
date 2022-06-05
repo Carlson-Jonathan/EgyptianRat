@@ -37,18 +37,12 @@ private:
 
     vector<shared_ptr<Player>> playerList;
     vector<pair<float, float>> cardPositions;
+    vector<pair<float, float>> cardOffsetPositions;
     vector<shared_ptr<Card>>   prizePot;
     vector<sf::RectangleShape> greenRectangles;
     vector<sf::Text>           deckSizeNumbers;
 
     bool buttonIsHeld = false;
-
-    vector<pair<float, float>> deckSizeTextPositions = {
-        {100.f, 108.f}, // Player 1
-        {250.f, 108.f}, // Player 2
-        {400.f, 108.f}, // Player 3
-        {100.f, 643.f}, // Player 4
-    };
 
     pair<pair<float, float>, pair<float, float>> gearIconClickArea = {
         {10, 40}, {10, 40}
@@ -138,14 +132,20 @@ void GameTable::set_GearMenuIcon() {
 
 void GameTable::set_CardPositions() {
 
-    xMid = -(globalData->screenWidth / 2.0);
-    yMid = -(globalData->screenHeight / 2.0);
+    pair<float, float> center = globalData->screenCenter;
 
     cardPositions = { 
-        {xMid + 300.0, yMid +  72.0}, // Player 1
-        {xMid +  50.0, yMid + 170.0}, // Player 2
-        {xMid - 300.0, yMid +  72.0}, // Player 3
-        {xMid +  50.0, yMid - 170.0}, // Player 4
+        {-center.first + 70.f, -center.second + 72.f}, // Player 1
+        {-center.first + 50.f, -center.second + 97.f}, // Player 2
+        {-center.first + 30.f, -center.second + 72.f}, // Player 3
+        {-center.first + 50.f, -center.second + 48.f}, // Player 4
+    };
+
+    cardOffsetPositions = {
+        {}, // Player 1
+        {}, // Player 2
+        {}, // Player 3
+        {}  // Player 4
     };
 
     // Apply screen positions to player card decks
@@ -310,6 +310,7 @@ void GameTable::listener_WindowResized() {
         set_CardBackPositions(); 
         set_DeckSizeTextPositions();
         set_GreenRectanglePositions();
+        set_CardPositions(); // This does not include additional cards played 
         globalData->eventHandler.windowResized = false;
     }
 }
@@ -389,6 +390,14 @@ void GameTable::draw_AllTableSprites() {
     draw_CardsBacks();
     draw_DeckSizeNumbers();
     globalData->window.draw(gearMenuIcon);
+
+
+    globalData->window.draw(playerList[0]->hand[0]->cardSprite);
+    globalData->window.draw(playerList[1]->hand[0]->cardSprite);
+    globalData->window.draw(playerList[2]->hand[0]->cardSprite);
+    globalData->window.draw(playerList[3]->hand[0]->cardSprite);
+
+
 }
 
 // -------------------------------------------------------------------------------------------------

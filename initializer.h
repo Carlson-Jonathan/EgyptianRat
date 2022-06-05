@@ -17,7 +17,7 @@ using namespace std;
 class Initializer {
 public:
 
-	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "War Card Game By Jonathan Carlson"), 
+	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "Egyptian Rat | by Jonathan Carlson"), 
 					eventHandler(window) {		
 						
 		window.setFramerateLimit(frameRate);
