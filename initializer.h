@@ -17,8 +17,8 @@ using namespace std;
 class Initializer {
 public:
 
-	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "War Card Game By Jonathan Carlson"), 
-					eventHandler(window, screenWidth, screenHeight) {		
+	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "Egyptian Rat | by Jonathan Carlson"), 
+					eventHandler(window) {		
 						
 		window.setFramerateLimit(frameRate);
 
@@ -29,12 +29,14 @@ public:
 		// Play song
 		// gameSound.loadAndPlayMusic(defaultMusic);
 		setFontFamily();
+		setScreenCenter();
 	}
 
     //----------------------------------------------------------------------------------------------
 
-	unsigned int screenWidth  = 500;
-	unsigned int screenHeight = 750;
+	unsigned int screenWidth  = 600;
+	unsigned int screenHeight = 700;
+	pair<float, float> screenCenter = {};
 	
 	short frameRate = 20;
 	short gameSpeed	= 4;
@@ -56,6 +58,10 @@ public:
 	GameSound      gameSound;
 	EventHandler   eventHandler;
 	TextureManager textures;
+
+	void setScreenCenter() {
+		this->screenCenter = {screenWidth / 2.f, screenHeight / 2.f};
+	}
 
 private:
 

@@ -16,17 +16,19 @@ class EventHandler {
 public:
 
 	EventHandler() {}
-	EventHandler(sf::RenderWindow & window, unsigned int & screenWidth, unsigned int & screenHeight);
+	EventHandler(sf::RenderWindow & window);
 
 	void listen();
 
 	bool mouseRelease = false;
+	bool windowResized = false;
+
+	unsigned int screenWidth = 0;
+	unsigned int screenHeight = 0;
 
 private:
 
 	sf::RenderWindow* window;
-	unsigned int*  	  screenWidth;
-	unsigned int*     screenHeight;
 	sf::Event 	 	  event;
 	Joystick 		  joystick;
 
@@ -39,11 +41,8 @@ private:
 // =================================================================================================
 
 
-EventHandler::EventHandler(sf::RenderWindow & window, unsigned int & screenWidth, 
-						   unsigned int & screenHeight) {
+EventHandler::EventHandler(sf::RenderWindow & window) {
 	this->window = &window;
-	this->screenWidth = &screenWidth;
-	this->screenHeight = &screenHeight;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -51,9 +50,6 @@ EventHandler::EventHandler(sf::RenderWindow & window, unsigned int & screenWidth
 void EventHandler::listen() {
 	while (window->pollEvent(event)) {
 
-		// resetEvents();	
-
-	
 		switch(event.type) {
 			case sf::Event::Closed:
 				closeWindow();
@@ -69,7 +65,7 @@ void EventHandler::listen() {
 				mouseRelease = true;
 				break;		
 			case sf::Event::MouseWheelMoved:
-				// cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
+				cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
 				break;	
 			case sf::Event::MouseMoved:
 				// cout << "Mouse position: {" << event.mouseMove.x << ", " << event.mouseMove.y << "}" << endl;
@@ -78,8 +74,8 @@ void EventHandler::listen() {
 				break;
 		}	
 
-		// joystick.joystickActions(0);
-		// joystick.joystickActions(1);
+		joystick.joystickActions(0);
+		joystick.joystickActions(1);
 	}
 }
 
@@ -92,16 +88,16 @@ void EventHandler::mouseButton() {
 			// cout << "Mouse LEFT" << endl;
 			break;
 		case sf::Mouse::Right:
-			// cout << "Mouse RIGHT" << endl;
+			cout << "Mouse RIGHT" << endl;
 			break;
 		case sf::Mouse::Middle:
-			// cout << "Mouse MIDDLE" << endl;
+			cout << "Mouse MIDDLE" << endl;
 			break;
 		case sf::Mouse::XButton1:
-			// cout << "Mouse XButton1" << endl;
+			cout << "Mouse XButton1" << endl;
 			break;
 		case sf::Mouse::XButton2:
-			// cout << "Mouse XButton2" << endl;
+			cout << "Mouse XButton2" << endl;
 			break;
 	}
 }	
@@ -116,10 +112,11 @@ void EventHandler::closeWindow() {
 // -------------------------------------------------------------------------------------------------
 
 void EventHandler::resizeWindow() {
-	screenWidth  = &event.size.width;
-	screenHeight = &event.size.height;
-	sf::FloatRect visibleArea(0, 0, *screenWidth, *screenHeight);
+	this->screenWidth = event.size.width;
+	this->screenHeight = event.size.height;
+	sf::FloatRect visibleArea(0, 0, screenWidth, screenHeight);
 	window->setView(sf::View(visibleArea));
+	windowResized = true;
 }
 
 #endif // EVENTHANDLER_H

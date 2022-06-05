@@ -25,7 +25,7 @@ private:
     vector<sf::Text> headingTextObjects;
     pair<float, float> firstCardPosition = {225.f, 350.f};
     bool buttonIsHeld = false;
-    short numberOfPlayers = 6;
+    short numberOfPlayers = 4;
 
     vector<pair<float, float>> headingTextPositions = {
         {340,  50},
