@@ -18,7 +18,8 @@ class Initializer {
 public:
 
 	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "Egyptian Rat | by Jonathan Carlson"), 
-					eventHandler(window) {		
+					eventHandler(window), 
+					view(sf::Vector2f(screenWidth / 2.f, screenHeight / 2.f), sf::Vector2f(screenWidth, screenHeight)) {		
 						
 		window.setFramerateLimit(frameRate);
 
@@ -52,6 +53,7 @@ public:
 	bool mayInitializeGameTable = false;
 
 	sf::RenderWindow window;
+	sf::View view;
 	sf::Font defaultFont;
 	// sf::Sprite background;
 
