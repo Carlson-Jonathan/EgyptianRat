@@ -47,7 +47,6 @@ Card::Card(Initializer & globalData, string cardName) {
 
     cardSprite.setTextureRect(sf::IntRect(0, 0, 100, 145));
     cardSprite.setTexture(globalData.textures.textures[cardName]);
-    cardSprite.setOrigin(-100, -100);	
 
     setCardValue(cardName);
     setCardSuite(cardName);
