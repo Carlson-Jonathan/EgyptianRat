@@ -45,17 +45,9 @@ private:
 
     bool buttonIsHeld = false;
 
-    pair<pair<float, float>, pair<float, float>> gearIconClickArea = {
-        {10, 40}, {10, 40}
-    };    
-
-    pair<pair<float, float>, pair<float, float>> plusIconClickArea = {
-        {15, 40}, {55, 80}
-    }; 
-
-    pair<pair<float, float>, pair<float, float>> minusIconClickArea = {
-        {15, 40}, {95, 120}
-    };         
+    pair<pair<float, float>, pair<float, float>> gearIconClickArea  = {{10, 40}, {10,  40}};    
+    pair<pair<float, float>, pair<float, float>> plusIconClickArea  = {{15, 40}, {55,  80}}; 
+    pair<pair<float, float>, pair<float, float>> minusIconClickArea = {{15, 40}, {95, 120}};         
 
 	sf::Font  font; 
     sf::Clock clock;
@@ -75,7 +67,6 @@ private:
     void set_DeckSizeTextPositions();
     void set_GreenRectangles();
     void set_GreenRectanglePositions();
-    void set_GameSpeed(short speed);
 
     void draw_CardsBacks();
     void draw_GreenRectangles();
@@ -99,7 +90,6 @@ private:
     void dealCardsToPlayers();  
 
     void adjustDeckSizeNumber(shared_ptr<Player> player);
-
     void popPlayedCardsFromPlayerDecks();
 
     void printAllPlayerStats();
@@ -130,7 +120,6 @@ void GameTable::construct(Initializer & globalData) {
     set_GearMenuIcon();
     set_PlusIcon();
     set_MinusIcon();
-    set_GameSpeed(globalData.gameSpeed);
     set_CardPositions();
     set_CardBackPositions();
     set_GreenRectangles();
@@ -151,27 +140,31 @@ void GameTable::set_GearMenuIcon() {
 
 void GameTable::set_CardPositions() {
 
-    pair<float, float> center = globalData->screenCenter;
+    // pair<float, float> center = globalData->screenCenter;
+    float centerX = globalData->screenCenter.first;
+    float centerY =  globalData->screenCenter.second;
+
+    cout << "Screen Center is " << centerX << ", " << centerY << endl;
 
     cardPositions = { 
-        {-center.first + 70.f, -center.second + 72.f}, // Player 1
-        {-center.first + 50.f, -center.second + 97.f}, // Player 2
-        {-center.first + 30.f, -center.second + 72.f}, // Player 3
-        {-center.first + 50.f, -center.second + 48.f}, // Player 4
+        {centerX - 70.f, centerY - 72.f}, // Player 1
+        {centerX - 50.f, centerY - 97.f}, // Player 2
+        {centerX - 30.f, centerY - 72.f}, // Player 3
+        {centerX - 50.f, centerY - 48.f}, // Player 4
     };
 
     cardPositionOffsets = {
-        { 20.f,   0.f}, // Player 1
-        {  0.f,  20.f}, // Player 2
-        {-20.f,   0.f}, // Player 3
-        {  0.f, -20.f}  // Player 4
+        {-20.f,   0.f}, // Player 1
+        {  0.f, -20.f}, // Player 2
+        { 20.f,   0.f}, // Player 3
+        {  0.f,  20.f}  // Player 4
     };
 
     // Apply screen positions to player card decks
     for(short i = 0; i < 4; i++) {
         for(short j = 0, x = 0, y = 0; j < 4; 
         j++, x += cardPositionOffsets[i].first, y += cardPositionOffsets[i].second) {
-            playerList[i]->hand[j]->cardSprite.setOrigin(cardPositions[i].first + x, cardPositions[i].second + y);
+            playerList[i]->hand[j]->cardSprite.setPosition(cardPositions[i].first + x, cardPositions[i].second + y);
         }
     }
 }
@@ -182,25 +175,10 @@ void GameTable::set_CardBackPositions() {
     float xCenter = globalData->screenCenter.first;
     float yCenter = globalData->screenCenter.second;
 
-    cardDeck.cardBacks[0].setOrigin(-xCenter + 260.f, -yCenter + 72.f);  
-    cardDeck.cardBacks[1].setOrigin(-xCenter +  50.f, -yCenter + 325.f);   
-    cardDeck.cardBacks[2].setOrigin(-xCenter - 157.f, -yCenter +  73.f);   
-    cardDeck.cardBacks[3].setOrigin(-xCenter +  50.f, -yCenter - 180.f);
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::set_GameSpeed(short speed) {
-
-    // Reverse speed variable so 1 is fastest and 10 slowest.
-    short reverse[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
-    speed = reverse[speed];
-
-    // Speeds (slow to fast)     1    2     3     4     5     6     7     8     9    10
-    short placementDelay[]  = { 36,  47,   63,   84,  113,  150,  195,  260,  338,  439};
-    short resultsDelay[]    = {237, 316,  422,  563,  750, 1000, 1300, 1690, 2197, 2856};
-    short conclusionDelay[] = {712, 949, 1266, 1688, 2250, 3000, 3900, 5070, 6591, 8568};
-    short tieDelay[]        = {474, 632,  843, 1125, 1500, 2000, 2600, 3380, 4394, 5712};
+    cardDeck.cardBacks[0].setPosition(xCenter - 260.f, yCenter - 72.f);  
+    cardDeck.cardBacks[1].setPosition(xCenter -  50.f, yCenter - 325.f);   
+    cardDeck.cardBacks[2].setPosition(xCenter + 157.f, yCenter -  73.f);   
+    cardDeck.cardBacks[3].setPosition(xCenter -  50.f, yCenter + 180.f);
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -246,8 +224,8 @@ void GameTable::set_GreenRectangles() {
 
 void GameTable::set_GreenRectanglePositions() {
     for(short i = 0; i < 4; i++) {
-        greenRectangles[i].setOrigin(cardDeck.cardBacks[i].getOrigin().x - 21, 
-                                     cardDeck.cardBacks[i].getOrigin().y - 26);        
+        greenRectangles[i].setPosition(cardDeck.cardBacks[i].getPosition().x + 21, 
+                                       cardDeck.cardBacks[i].getPosition().y + 26);        
     }
 }
 
@@ -269,9 +247,10 @@ void GameTable::set_DeckSizeText() {
 
 void GameTable::set_DeckSizeTextPositions() {
     for(short i = 0; i < 4; i++) {
-        sf::FloatRect textRect = deckSizeNumbers[i].getLocalBounds();
-        deckSizeNumbers[i].setOrigin(cardDeck.cardBacks[i].getOrigin().x - 50 + textRect.width / 2.f, 
-                                     cardDeck.cardBacks[i].getOrigin().y - 38);
+        float cardPosX = cardDeck.cardBacks[i].getPosition().x;
+        float cardPosY = cardDeck.cardBacks[i].getPosition().y;
+        deckSizeNumbers[i].setPosition(cardPosX + 50.f,  cardPosY + 72.f);
+        Miscellaneous::centerTextAlignment(deckSizeNumbers[i]);
     }
 }
 
@@ -519,7 +498,6 @@ void GameTable::draw_AllTableSprites() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::listener_MenuEventMonitor() {
-    set_GameSpeed(globalData->gameSpeed);
     changeCardStyle();
 }
 
@@ -543,8 +521,8 @@ void GameTable::printAllPlayerStats() {
                 << "\n==============================\n";
         for(short j = 0; j < playerList[i]->hand.size(); j++) {
             cout << playerList[i]->hand[j]->cardName << "\t{" 
-                 << playerList[i]->hand[j]->cardSprite.getOrigin().x << ", "
-                 << playerList[i]->hand[j]->cardSprite.getOrigin().y << "}\n";
+                 << playerList[i]->hand[j]->cardSprite.getPosition().x << ", "
+                 << playerList[i]->hand[j]->cardSprite.getPosition().y << "}\n";
         }
     }
     cout << "========================================================\n";
@@ -562,7 +540,7 @@ void GameTable::printAllBooleanPermissions() {
 void GameTable::printPrizePotContents() {
     cout << "=============== Prize Pot: ===============" << endl;
     for(auto i : prizePot) {
-        cout << i->cardName << "\t" << i->cardSprite.getOrigin().x << ", " << i->cardSprite.getOrigin().y << endl;
+        cout << i->cardName << "\t" << i->cardSprite.getPosition().x << ", " << i->cardSprite.getPosition().y << endl;
     }
     cout << "Prize Pot size: " << prizePot.size() << endl;
 }
