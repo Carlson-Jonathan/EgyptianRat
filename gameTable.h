@@ -11,6 +11,7 @@
 #include "cardDeck.h"
 #include "initializer.h"
 #include "player.h"
+#include "gameLogic.h"
 
 using namespace std;
 
@@ -28,7 +29,8 @@ public:
 private:
 
     Initializer* globalData;
-    CardDeck cardDeck; 
+    CardDeck     cardDeck; 
+    GameLogic    gameLogic;
 
     vector<shared_ptr<Player>> playerList;
     vector<pair<float, float>> cardPositions;
@@ -275,7 +277,7 @@ void GameTable::dealCardsToPlayers() {
     for(short i = 0; i < numberOfPlayers; i++) {
         playerList[i]->hand = hands[i];
         playerList[i]->numCardsInHand = hands[i].size();
-        playerList[i]->topCard = playerList[i]->hand[0];
+        // playerList[i]->topCard = playerList[i]->hand[0];
     }
 }
 
@@ -491,7 +493,7 @@ void GameTable::printAllPlayerStats() {
     for(short i = 0; i < numberOfPlayers; i++) {
         cout << "\n==============================\n\tPlayer " << i + 1 << "\n\tHand size: " 
                 << playerList[i]->hand.size() << "\n\tCards on deck: " << playerList[i]->numCardsInHand 
-                << "\n\tTop card: " << playerList[i]->topCard->cardName 
+                // << "\n\tTop card: " << playerList[i]->topCard->cardName 
                 << "\n==============================\n";
         for(short j = 0; j < playerList[i]->hand.size(); j++) {
             cout << playerList[i]->hand[j]->cardName << "\t{" 
@@ -523,7 +525,8 @@ void GameTable::printPrizePotContents() {
 
 void GameTable::printPlayerMove(shared_ptr<Player> player) {
     cout << player->name << " is out: " << player->isOutOfGame 
-         << " Cards on deck: " << player->numCardsInHand << "\t" << player->topCard->cardName << endl; 
+        //  << " Cards on deck: " << player->numCardsInHand << "\t" << player->topCard->cardName 
+        << endl; 
 }
 
 #endif // GAMETABLE_H

@@ -4,9 +4,9 @@
 #define TESTHARNESS_CPP
 
 #include <iostream>
-using namespace std;
-
 #include <map>
+
+using namespace std;
 
 #include "../gameTable.h"
 
@@ -14,6 +14,7 @@ using namespace std;
 #include "cardDeck_test.h"
 #include "card_test.h"
 #include "gameTable_test.h"
+#include "gameLogic_test.h"
 
 //--------------------------------------------------------------------------------------------------
 
@@ -47,15 +48,15 @@ int main() {
 
     // ====================== CardDeck.h ======================
 
-    allResults.insert(pair<string, bool>(
-        "CardDeck_Test::divideDeck_test()",
-        CardDeck_Test::divideDeck_test()
-    ));   
+    // allResults.insert(pair<string, bool>(
+    //     "CardDeck_Test::divideDeck_test()",
+    //     CardDeck_Test::divideDeck_test()
+    // ));   
 
-    allResults.insert(pair<string, bool>(
-        "CardDeck_Test::shuffleDeck_test()",
-        CardDeck_Test::shuffleDeck_test()
-    ));   
+    // allResults.insert(pair<string, bool>(
+    //     "CardDeck_Test::shuffleDeck_test()",
+    //     CardDeck_Test::shuffleDeck_test()
+    // ));   
 
     // ======================== Card.h ========================
 
@@ -69,11 +70,11 @@ int main() {
         Card_Test::setCardSuite_test()
     ));    
 
-    // ===================== gameTable.h ======================
+    // ===================== GameLogic.h ======================
 
     allResults.insert(pair<string, bool>(
-        "GameTable_Test::getRoundWinner_test()",
-        GameTable_Test::getRoundWinner_test()
+        "GameLogic_Test::setTopCards_test()",
+        GameLogic_Test::setTopCards_test()
     ));  
 
 
