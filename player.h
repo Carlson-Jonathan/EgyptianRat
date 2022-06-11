@@ -23,7 +23,8 @@ public:
     short   numCardsInHand = 0;
 
     vector<shared_ptr<Card>> hand;
-    shared_ptr<Card> topCard;
+    vector<shared_ptr<Card>> topCards;
+
 };
 
 

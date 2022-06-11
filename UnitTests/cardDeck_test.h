@@ -41,7 +41,7 @@ public:
 
         CardDeck cardDeck;
         cardDeck.deck = generateDeck();
-        vector<vector<Card>> decks = cardDeck.divideDeck(7);
+        vector<vector<shared_ptr<Card>>> decks = cardDeck.divideDeck(7);
         vector<short> sizeResults = {8, 8, 8, 7, 7, 7, 7};
         set<short> duplicateValueChecker;
         set<string> duplicateSuiteChecker;
@@ -61,13 +61,13 @@ public:
         // Verify all cards in the decks are unique.
         for(short i = 0; i < decks.size(); i++) {
             for(short j = 0; j < decks[i].size(); j++) {
-                duplicateValueChecker.insert(decks[i][j].value);
+                duplicateValueChecker.insert(decks[i][j]->value);
             }
         }
 
         for(short i = 0; i < decks.size(); i++) {
             for(short j = 0; j < decks[i].size(); j++) {
-                duplicateSuiteChecker.insert(decks[i][j].suite);
+                duplicateSuiteChecker.insert(decks[i][j]->suite);
             }
         }        
 
@@ -91,13 +91,13 @@ public:
 
 private:
 
-    static vector<Card> generateDeck() {
+    static vector<shared_ptr<Card>> generateDeck() {
         CardDeck cardDeck;
-        Card card;
+        shared_ptr<Card> card;
 
         for(short i = 0; i < 52; i++) {
-            card.value = i;
-            card.suite = char(i + 65);
+            card->value = i;
+            card->suite = char(i + 65);
             cardDeck.deck.push_back(card);
         }
 
