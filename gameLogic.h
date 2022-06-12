@@ -12,6 +12,7 @@ class GameLogic {
 public:
 
     GameLogic() {}
+    GameLogic(Initializer & globalData); 
     friend GameLogic_Test;
 
     void gameLogicLoop();
@@ -27,24 +28,147 @@ private:
     //    if so, set number of plays for next player
     //
 
+    Initializer* globalData;
+
     short playRequirement = 0;
+    bool  buttonIsHeld = false;
 
     vector<shared_ptr<Card>> prizePot = {};
 
+    bool leftClick();
+    bool mouseRelease();
+    bool rightClick();
+    bool joystick_0_Button_1();
+    bool joystick_0_Button_2();
+    bool joystick_1_Button_1();
+    bool joystick_1_Button_2();
+    bool keyboard_Play();
+    bool keyboard_Slap();
+
+    bool keyReleased();
+    bool joystickRelease();
 
     void resetRound();
     void setPlayRequirement(const Card & card);
-    void startPlayerRound();
+    void startPlayerRound(Player & player);
     void playCard(Player & player);
     void setTopCards(Player & player);
 
     bool isFaceCard(const Card & card);
+
+    void test1();
+    void test2();
 
 };
 
 
 // =================================================================================================
 
+
+GameLogic::GameLogic(Initializer & globalData) {
+    this->globalData = &globalData;
+    cout << "Number of players = " << globalData.numberOfPlayers << endl;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::leftClick() {
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !buttonIsHeld) {
+        cout << "GameLogic Left click" << endl; 
+        buttonIsHeld = true;
+        return true;
+    }
+
+    mouseRelease();
+
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::rightClick() {
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Right) && !buttonIsHeld) {
+        cout << "GameLogic Right click" << endl; 
+        buttonIsHeld = true;
+        return true;
+    }
+
+    mouseRelease();
+
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::mouseRelease() {
+    if(globalData->eventHandler.mouseRelease2) {
+        buttonIsHeld = false;
+        globalData->eventHandler.mouseRelease2 = false;
+        return true;
+    }
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::joystickRelease() {
+    if(globalData->eventHandler.joystickRelease) {
+        buttonIsHeld = false;
+        globalData->eventHandler.joystickRelease = false;
+        return true;
+    }
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::joystick_0_Button_1() {
+    if(sf::Joystick::isButtonPressed(0, 1) && !buttonIsHeld) {
+        cout << "Joystick 0, button 1 pressed" << endl; 
+        buttonIsHeld = true;
+        return true;
+    }
+    joystickRelease();
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::joystick_1_Button_1() {
+
+    if(sf::Joystick::isButtonPressed(1, 1) && !buttonIsHeld) {
+        cout << "Joystick 1 - button 1 was pressed!" << endl;
+        buttonIsHeld = true;
+        return true;
+    }
+
+    joystickRelease();
+
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool GameLogic::keyReleased() {
+    if(sf::Event::JoystickButtonReleased) {
+        cout << "A key was released" << endl; 
+        return true;
+    }
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void GameLogic::gameLogicLoop() {
+    leftClick();
+    rightClick();
+    joystick_0_Button_1();
+    joystick_1_Button_1();
+    // keyReleased();
+}
+
+
+// -------------------------------------------------------------------------------------------------
 
 void GameLogic::resetRound() {
     playRequirement = 0;
@@ -81,8 +205,6 @@ void GameLogic::playCard(Player & player) {
     player.hand.erase(player.hand.begin());
 
 
-    // place card in pot
-    // Remove card[0] from player deck
     // draw card
     // compare against requirement
     // set requirement
@@ -91,7 +213,9 @@ void GameLogic::playCard(Player & player) {
 
 // -------------------------------------------------------------------------------------------------
 
-void GameLogic::startPlayerRound() {
+void GameLogic::startPlayerRound(Player & player) {
+    setTopCards(player);
+
     // play a card
     // if isFaceCard
     //     set playRequirement   

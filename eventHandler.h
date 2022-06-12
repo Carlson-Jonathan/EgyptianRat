@@ -18,9 +18,13 @@ public:
 	EventHandler() {}
 	EventHandler(sf::RenderWindow & window);
 
-	void listen();
+	string listen();
+	sf::Event 	 	  event;
 
 	bool mouseRelease = false;
+	bool mouseRelease2 = false;
+	bool joystickRelease = false;
+
 	bool windowResized = false;
 
 	unsigned int screenWidth = 0;
@@ -29,10 +33,10 @@ public:
 private:
 
 	sf::RenderWindow* window;
-	sf::Event 	 	  event;
 	Joystick 		  joystick;
 
-	void mouseButton();
+	string mouseButton();
+	string joystickButton();
 	void closeWindow();
 	void resizeWindow();
 };
@@ -47,7 +51,7 @@ EventHandler::EventHandler(sf::RenderWindow & window) {
 
 // -------------------------------------------------------------------------------------------------
 
-void EventHandler::listen() {
+string EventHandler::listen() {
 	while (window->pollEvent(event)) {
 
 		switch(event.type) {
@@ -58,34 +62,46 @@ void EventHandler::listen() {
 				resizeWindow();
 				break;
 			case sf::Event::MouseButtonPressed:
-				mouseButton();
+				return mouseButton();
 				break;
 			case sf::Event::MouseButtonReleased:
 				// cout << "Released!" << endl;
 				mouseRelease = true;
+				mouseRelease2 = true;
 				break;		
 			case sf::Event::MouseWheelMoved:
-				cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
+				// cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
 				break;	
 			case sf::Event::MouseMoved:
 				// cout << "Mouse position: {" << event.mouseMove.x << ", " << event.mouseMove.y << "}" << endl;
 				break;
+			case sf::Event::JoystickButtonReleased:
+				cout << "Joystick button was released!!!" << endl;
+				joystickRelease = true;
+				break;
+			case sf::Event::JoystickButtonPressed:
+				joystickButton();
+				break;
 			default:
+				return "";
 				break;
 		}	
 
-		joystick.joystickActions(0);
-		joystick.joystickActions(1);
+		// joystick.joystickActions(0);
+		// joystick.joystickActions(1);
 	}
+
+	return "";
 }
 
 // -------------------------------------------------------------------------------------------------
 
 // When a mouse button is pressed (any button), this performs an action based on which button.
-void EventHandler::mouseButton() {
+string EventHandler::mouseButton() {
 	switch(event.key.code) {
 		case sf::Mouse::Left:
 			// cout << "Mouse LEFT" << endl;
+			return "leftClick";
 			break;
 		case sf::Mouse::Right:
 			cout << "Mouse RIGHT" << endl;
@@ -100,8 +116,21 @@ void EventHandler::mouseButton() {
 			cout << "Mouse XButton2" << endl;
 			break;
 	}
+	return "";
 }	
 
+// -------------------------------------------------------------------------------------------------
+
+string EventHandler::joystickButton() {
+	// switch(event.key.code) {
+	// 	case sf::Joystick::
+	// 		cout << "Joystick button 3 pressed!" << endl;
+	// 		break;
+	// 	default:
+	// 		break;
+	// }
+	return "";
+}	
 // -------------------------------------------------------------------------------------------------
 
 void EventHandler::closeWindow() {
