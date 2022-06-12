@@ -35,14 +35,6 @@ private:
 
     vector<shared_ptr<Card>> prizePot = {};
 
-    bool leftClick();
-    bool mouseRelease();
-    bool rightClick();
-    bool keyboard_Play();
-    bool keyboard_Slap();
-
-    bool keyReleased();
-
     void resetRound();
     void setPlayRequirement(const Card & card);
     void startPlayerRound(Player & player);
@@ -50,10 +42,6 @@ private:
     void setTopCards(Player & player);
 
     bool isFaceCard(const Card & card);
-
-    void test1();
-    void test2();
-
 };
 
 
@@ -62,63 +50,17 @@ private:
 
 GameLogic::GameLogic(Initializer & globalData) {
     this->globalData = &globalData;
-    cout << "Number of players = " << globalData.numberOfPlayers << endl;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-bool GameLogic::leftClick() {
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !buttonIsHeld) {
-        cout << "GameLogic Left click" << endl; 
-        buttonIsHeld = true;
-        return true;
-    }
-
-    mouseRelease();
-
-    return false;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-bool GameLogic::rightClick() {
-    if(sf::Mouse::isButtonPressed(sf::Mouse::Right) && !buttonIsHeld) {
-        cout << "GameLogic Right click" << endl; 
-        buttonIsHeld = true;
-        return true;
-    }
-
-    mouseRelease();
-
-    return false;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-bool GameLogic::mouseRelease() {
-    if(globalData->eventHandler.mouseRelease2) {
-        buttonIsHeld = false;
-        globalData->eventHandler.mouseRelease2 = false;
-        return true;
-    }
-    return false;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-bool GameLogic::keyReleased() {
-    if(sf::Event::JoystickButtonReleased) {
-        cout << "A key was released" << endl; 
-        return true;
-    }
-    return false;
 }
 
 // -------------------------------------------------------------------------------------------------
 
 void GameLogic::gameLogicLoop() {
-    leftClick();
-    rightClick();
+    // leftClick();
+    // rightClick();
+
+    short mouseButton = globalData->eventHandler.getMouseButtonPressed();     
+    if(mouseButton != -1)
+        cout << "Mouse button " << mouseButton << " pressed." << endl;
 
     short button0 = globalData->eventHandler.getJoystickButtonPressed(0);
     if(button0 != -1)
@@ -126,7 +68,8 @@ void GameLogic::gameLogicLoop() {
 
     short button1 = globalData->eventHandler.getJoystickButtonPressed(1);
     if(button1 != -1)
-        cout << "Joystick 1 button " << button1 << " pressed." << endl;        
+        cout << "Joystick 1 button " << button1 << " pressed." << endl;   
+
 }
 
 

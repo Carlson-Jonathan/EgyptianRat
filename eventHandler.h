@@ -18,12 +18,13 @@ public:
 	EventHandler() {}
 	EventHandler(sf::RenderWindow & window);
 
-	string listen();
-	sf::Event 	 	  event;
+	void listen();
+	sf::Event event;
 
 	bool mouseRelease = false;
 	bool mouseRelease2 = false;
 	bool joystickButtonHeld = false;
+	bool mouseButtonIsHeld = false;
 
 	bool windowResized = false;
 
@@ -31,6 +32,7 @@ public:
 	unsigned int screenHeight = 0;
 
 	short getJoystickButtonPressed(short joystickNumber);
+	short getMouseButtonPressed();
 
 private:
 
@@ -42,6 +44,7 @@ private:
 	void resizeWindow();
 
 	vector<bool> joystickButtonPresses = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	vector<bool> mouseButtonPresses = {0, 0, 0, 0, 0}; // Left, Right, Middle, X1, X2
 };
 
 
@@ -54,7 +57,7 @@ EventHandler::EventHandler(sf::RenderWindow & window) {
 
 // -------------------------------------------------------------------------------------------------
 
-string EventHandler::listen() {
+void EventHandler::listen() {
 	while (window->pollEvent(event)) {
 
 		switch(event.type) {
@@ -65,12 +68,12 @@ string EventHandler::listen() {
 				resizeWindow();
 				break;
 			case sf::Event::MouseButtonPressed:
-				return mouseButton();
 				break;
 			case sf::Event::MouseButtonReleased:
 				// cout << "Released!" << endl;
 				mouseRelease = true;
 				mouseRelease2 = true;
+				mouseButtonIsHeld = false;
 				break;		
 			case sf::Event::MouseWheelMoved:
 				// cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
@@ -83,43 +86,36 @@ string EventHandler::listen() {
 				joystickButtonHeld = false;
 				break;
 			default:
-				return "";
 				break;
 		}	
 	}
-
-	return "";
 }
 
 // -------------------------------------------------------------------------------------------------
 
 // When a mouse button is pressed (any button), this performs an action based on which button.
-string EventHandler::mouseButton() {
-	switch(event.key.code) {
-		case sf::Mouse::Left:
-			// cout << "Mouse LEFT" << endl;
-			return "leftClick";
-			break;
-		case sf::Mouse::Right:
-			cout << "Mouse RIGHT" << endl;
-			break;
-		case sf::Mouse::Middle:
-			cout << "Mouse MIDDLE" << endl;
-			break;
-		case sf::Mouse::XButton1:
-			cout << "Mouse XButton1" << endl;
-			break;
-		case sf::Mouse::XButton2:
-			cout << "Mouse XButton2" << endl;
-			break;
+short EventHandler::getMouseButtonPressed() {
+
+	if(mouseButtonIsHeld) return -1;
+
+	mouseButtonPresses    = {0, 0, 0, 0, 0};
+	mouseButtonPresses[0] = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+	mouseButtonPresses[1] = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+	mouseButtonPresses[2] = sf::Mouse::isButtonPressed(sf::Mouse::Middle);
+
+	for(short i = 0; i < mouseButtonPresses.size(); i++) {
+		if(mouseButtonPresses[i]) {
+			mouseButtonIsHeld = true;
+			return i;
+		}
 	}
-	return "";
+
+	return -1;
 }	
 
 // -------------------------------------------------------------------------------------------------
 
 short EventHandler::getJoystickButtonPressed(short joystickNumber) {
-
     for(short i = 0; i < joystickButtonPresses.size(); i++) {
         joystickButtonPresses[i] = sf::Joystick::isButtonPressed(joystickNumber, i);
         if(joystickButtonPresses[i] && !joystickButtonHeld) {

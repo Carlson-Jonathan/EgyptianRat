@@ -314,7 +314,7 @@ void GameTable::listen_ForMouseClicks() {
 bool GameTable::leftClick() {
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !buttonIsHeld) {
         buttonIsHeld = true;
-        cout << "GameTable Left click" << endl;
+        // cout << "GameTable Left click" << endl;
         return true;
     }
     return false;
