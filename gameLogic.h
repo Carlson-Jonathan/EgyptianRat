@@ -38,15 +38,10 @@ private:
     bool leftClick();
     bool mouseRelease();
     bool rightClick();
-    bool joystick_0_Button_1();
-    bool joystick_0_Button_2();
-    bool joystick_1_Button_1();
-    bool joystick_1_Button_2();
     bool keyboard_Play();
     bool keyboard_Slap();
 
     bool keyReleased();
-    bool joystickRelease();
 
     void resetRound();
     void setPlayRequirement(const Card & card);
@@ -111,44 +106,6 @@ bool GameLogic::mouseRelease() {
 
 // -------------------------------------------------------------------------------------------------
 
-bool GameLogic::joystickRelease() {
-    if(globalData->eventHandler.joystickReleased) {
-        buttonIsHeld = false;
-        globalData->eventHandler.joystickReleased = false;
-        return true;
-    }
-    return false;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-bool GameLogic::joystick_0_Button_1() {
-    if(sf::Joystick::isButtonPressed(0, 1) && !buttonIsHeld) {
-        cout << "Joystick 0, button 1 pressed" << endl; 
-        buttonIsHeld = true;
-        return true;
-    }
-    joystickRelease();
-    return false;
-}
-
-// -------------------------------------------------------------------------------------------------
-
-bool GameLogic::joystick_1_Button_1() {
-
-    if(sf::Joystick::isButtonPressed(1, 1) && !buttonIsHeld) {
-        cout << "Joystick 1 - button 1 was pressed!" << endl;
-        buttonIsHeld = true;
-        return true;
-    }
-
-    joystickRelease();
-
-    return false;
-}
-
-// -------------------------------------------------------------------------------------------------
-
 bool GameLogic::keyReleased() {
     if(sf::Event::JoystickButtonReleased) {
         cout << "A key was released" << endl; 
@@ -162,14 +119,14 @@ bool GameLogic::keyReleased() {
 void GameLogic::gameLogicLoop() {
     leftClick();
     rightClick();
-    joystick_0_Button_1();
-    joystick_1_Button_1();
-    // keyReleased();
 
-    if(globalData->eventHandler. joystick_0_Button_1())
-        cout << "Yay! Event handler is actually handling events!" << endl;
+    short button0 = globalData->eventHandler.getJoystickButtonPressed(0);
+    if(button0 != -1)
+        cout << "Joystick 0 button " << button0 << " pressed." << endl;        
 
-
+    short button1 = globalData->eventHandler.getJoystickButtonPressed(1);
+    if(button1 != -1)
+        cout << "Joystick 1 button " << button1 << " pressed." << endl;        
 }
 
 
