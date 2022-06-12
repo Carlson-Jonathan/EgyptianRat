@@ -112,9 +112,9 @@ bool GameLogic::mouseRelease() {
 // -------------------------------------------------------------------------------------------------
 
 bool GameLogic::joystickRelease() {
-    if(globalData->eventHandler.joystickRelease) {
+    if(globalData->eventHandler.joystickReleased) {
         buttonIsHeld = false;
-        globalData->eventHandler.joystickRelease = false;
+        globalData->eventHandler.joystickReleased = false;
         return true;
     }
     return false;
@@ -165,6 +165,11 @@ void GameLogic::gameLogicLoop() {
     joystick_0_Button_1();
     joystick_1_Button_1();
     // keyReleased();
+
+    if(globalData->eventHandler. joystick_0_Button_1())
+        cout << "Yay! Event handler is actually handling events!" << endl;
+
+
 }
 
 

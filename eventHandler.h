@@ -23,17 +23,23 @@ public:
 
 	bool mouseRelease = false;
 	bool mouseRelease2 = false;
-	bool joystickRelease = false;
+	bool joystickReleased = false;
+	bool joystick_0_released = false;
 
 	bool windowResized = false;
+	bool joystick_0_ButtonIsHeld = false;
 
 	unsigned int screenWidth = 0;
 	unsigned int screenHeight = 0;
+
+	bool joystick_0_Button_1();
 
 private:
 
 	sf::RenderWindow* window;
 	Joystick 		  joystick;
+
+	bool joystickRelease();
 
 	string mouseButton();
 	string joystickButton();
@@ -77,7 +83,8 @@ string EventHandler::listen() {
 				break;
 			case sf::Event::JoystickButtonReleased:
 				cout << "Joystick button was released!!!" << endl;
-				joystickRelease = true;
+				joystickReleased = true;
+				joystick_0_released = true;
 				break;
 			case sf::Event::JoystickButtonPressed:
 				joystickButton();
@@ -131,6 +138,30 @@ string EventHandler::joystickButton() {
 	// }
 	return "";
 }	
+
+// -------------------------------------------------------------------------------------------------
+
+bool EventHandler::joystickRelease() {
+    if(joystick_0_released) {
+        joystick_0_ButtonIsHeld = false;
+        joystick_0_released = false;
+        return true;
+    }
+    return false;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+bool EventHandler::joystick_0_Button_1() {
+    if(sf::Joystick::isButtonPressed(0, 1) && !joystick_0_ButtonIsHeld) {
+        cout << "Event Handler - Joystick 0, button 1 pressed" << endl; 
+        joystick_0_ButtonIsHeld = true;
+        return true;
+    }
+    joystickRelease();
+    return false;
+}
+
 // -------------------------------------------------------------------------------------------------
 
 void EventHandler::closeWindow() {
