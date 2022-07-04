@@ -42,6 +42,8 @@ private:
     void setTopCards(Player & player);
 
     bool isFaceCard(const Card & card);
+
+    string getPlayerInput();
 };
 
 
@@ -55,23 +57,34 @@ GameLogic::GameLogic(Initializer & globalData) {
 // -------------------------------------------------------------------------------------------------
 
 void GameLogic::gameLogicLoop() {
-    // leftClick();
-    // rightClick();
 
-    short mouseButton = globalData->eventHandler.getMouseButtonPressed();     
-    if(mouseButton != -1)
-        cout << "Mouse button " << mouseButton << " pressed." << endl;
-
-    short button0 = globalData->eventHandler.getJoystickButtonPressed(0);
-    if(button0 != -1)
-        cout << "Joystick 0 button " << button0 << " pressed." << endl;        
-
-    short button1 = globalData->eventHandler.getJoystickButtonPressed(1);
-    if(button1 != -1)
-        cout << "Joystick 1 button " << button1 << " pressed." << endl;   
-
+    string input = getPlayerInput();
+    if(input != "Null")
+        cout << input << endl;
 }
 
+// -------------------------------------------------------------------------------------------------
+
+string GameLogic::getPlayerInput() {
+    short mouseButton    = globalData->eventHandler.getMouseButtonPressed();
+    short joystick0      = globalData->eventHandler.getJoystickButtonPressed(0);
+    short joystick1      = globalData->eventHandler.getJoystickButtonPressed(1);
+    short keyBoardButton = globalData->eventHandler.getKeyboardButtonPressed();
+
+    if(mouseButton != -1)
+        return "M-" + to_string(mouseButton);
+
+    if(joystick0 != -1)
+        return "J0-" + to_string(joystick0);
+
+    if(joystick1 != -1)
+        return "J1-" + to_string(joystick1);
+
+    if(keyBoardButton != -1)
+        return "K-" + to_string(keyBoardButton);
+
+    return "Null";
+}
 
 // -------------------------------------------------------------------------------------------------
 

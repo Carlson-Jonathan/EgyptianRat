@@ -25,6 +25,7 @@ public:
 	bool mouseRelease2 = false;
 	bool joystickButtonHeld = false;
 	bool mouseButtonIsHeld = false;
+	bool keyboardButtonHeld = false;
 
 	bool windowResized = false;
 
@@ -33,6 +34,7 @@ public:
 
 	short getJoystickButtonPressed(short joystickNumber);
 	short getMouseButtonPressed();
+	short getKeyboardButtonPressed();
 
 private:
 
@@ -85,6 +87,9 @@ void EventHandler::listen() {
 				// cout << "Joystick button was released!!!" << endl;
 				joystickButtonHeld = false;
 				break;
+			case sf::Event::KeyReleased:
+				keyboardButtonHeld = false;
+				break;
 			default:
 				break;
 		}	
@@ -126,6 +131,32 @@ short EventHandler::getJoystickButtonPressed(short joystickNumber) {
 
 	return -1;
 }
+
+// -------------------------------------------------------------------------------------------------
+
+short EventHandler::getKeyboardButtonPressed() {
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 0;
+	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 1;
+	}	
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad0) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 2;
+	}	
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 3;
+	}			
+
+	return -1;
+};
 
 // -------------------------------------------------------------------------------------------------
 
