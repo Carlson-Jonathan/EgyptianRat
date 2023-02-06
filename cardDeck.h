@@ -15,8 +15,13 @@ class CardDeck_Test; // For unit testing
 class CardDeck {
 public:
 
-    CardDeck() {}
-    CardDeck(Initializer & globalData);
+    CardDeck() {
+        this->cardNames = Miscellaneous::getAllFileNamesFromDirectory("Images/Objects/PlayingCards/100x150");
+        shuffleDeck();
+        generateCardDeck();
+        generateCardBacks(numberOfCardBacks);
+    }
+
     friend CardDeck_Test; // For unit testing
 
 	vector<shared_ptr<Card>> deck;
@@ -33,7 +38,7 @@ public:
 private:
 
     short          numberOfCardBacks = 6;
-    Initializer*   globalData;
+    Initializer* globalData = Initializer::getInstance();
     vector<string> cardNames;
 
     void generateCardDeck  ();
@@ -41,17 +46,6 @@ private:
 
 
 // =================================================================================================
-
-
-CardDeck::CardDeck(Initializer & globalData) {
-    this->globalData = &globalData;
-    this->cardNames = Miscellaneous::getAllFileNamesFromDirectory("Images/Objects/PlayingCards/100x150");
-    shuffleDeck();
-    generateCardDeck();
-    generateCardBacks(numberOfCardBacks);
-}
-
-// -------------------------------------------------------------------------------------------------
 
 vector<vector<shared_ptr<Card>>> CardDeck::divideDeck(short numberOfDecks) {
 
@@ -104,7 +98,7 @@ void CardDeck::generateCardDeck() {
     }
 
     for(string i : this->cardNames) {
-        shared_ptr<Card> newCard = make_shared<Card>(*globalData, i);
+        shared_ptr<Card> newCard = make_shared<Card>(i);
         this->deck.push_back(newCard);
     }
 }

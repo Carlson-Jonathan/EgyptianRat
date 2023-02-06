@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "initializer.h"
+#include "card.h"
+#include "player.h"
 using namespace std;
 
 class GameLogic_Test;
@@ -12,7 +15,6 @@ class GameLogic {
 public:
 
     GameLogic() {}
-    GameLogic(Initializer & globalData); 
     friend GameLogic_Test;
 
     void gameLogicLoop();
@@ -28,7 +30,7 @@ private:
     //    if so, set number of plays for next player
     //
 
-    Initializer* globalData;
+    Initializer* globalData = Initializer::getInstance();
 
     short playRequirement = 0;
     bool  buttonIsHeld = false;
@@ -48,13 +50,6 @@ private:
 
 
 // =================================================================================================
-
-
-GameLogic::GameLogic(Initializer & globalData) {
-    this->globalData = &globalData;
-}
-
-// -------------------------------------------------------------------------------------------------
 
 void GameLogic::gameLogicLoop() {
 
