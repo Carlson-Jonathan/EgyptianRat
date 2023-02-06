@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "initializer.h"
+#include "card.h"
+#include "player.h"
 using namespace std;
 
 class GameLogic_Test;
@@ -27,24 +30,58 @@ private:
     //    if so, set number of plays for next player
     //
 
+    Initializer* globalData = Initializer::getInstance();
+
     short playRequirement = 0;
+    bool  buttonIsHeld = false;
 
     vector<shared_ptr<Card>> prizePot = {};
 
-
     void resetRound();
     void setPlayRequirement(const Card & card);
-    void startPlayerRound();
+    void startPlayerRound(Player & player);
     void playCard(Player & player);
     void setTopCards(Player & player);
 
     bool isFaceCard(const Card & card);
 
+    string getPlayerInput();
 };
 
 
 // =================================================================================================
 
+void GameLogic::gameLogicLoop() {
+
+    string input = getPlayerInput();
+    if(input != "Null")
+        cout << input << endl;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+string GameLogic::getPlayerInput() {
+    short mouseButton    = globalData->eventHandler.getMouseButtonPressed();
+    short joystick0      = globalData->eventHandler.getJoystickButtonPressed(0);
+    short joystick1      = globalData->eventHandler.getJoystickButtonPressed(1);
+    short keyBoardButton = globalData->eventHandler.getKeyboardButtonPressed();
+
+    if(mouseButton != -1)
+        return "M-" + to_string(mouseButton);
+
+    if(joystick0 != -1)
+        return "J0-" + to_string(joystick0);
+
+    if(joystick1 != -1)
+        return "J1-" + to_string(joystick1);
+
+    if(keyBoardButton != -1)
+        return "K-" + to_string(keyBoardButton);
+
+    return "Null";
+}
+
+// -------------------------------------------------------------------------------------------------
 
 void GameLogic::resetRound() {
     playRequirement = 0;
@@ -81,8 +118,6 @@ void GameLogic::playCard(Player & player) {
     player.hand.erase(player.hand.begin());
 
 
-    // place card in pot
-    // Remove card[0] from player deck
     // draw card
     // compare against requirement
     // set requirement
@@ -91,7 +126,9 @@ void GameLogic::playCard(Player & player) {
 
 // -------------------------------------------------------------------------------------------------
 
-void GameLogic::startPlayerRound() {
+void GameLogic::startPlayerRound(Player & player) {
+    setTopCards(player);
+
     // play a card
     // if isFaceCard
     //     set playRequirement   

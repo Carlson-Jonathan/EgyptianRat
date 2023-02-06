@@ -18,19 +18,20 @@ using namespace std;
 class GameTable {
 public:
 
-    GameTable() {}
-    GameTable(Initializer & globalData);
+    GameTable() {
+        construct();
+    }
 
     short numberOfPlayers = 0;
 
-    void construct(Initializer & globalData);
+    void construct();
     void gameTableLoop();
 
 private:
 
-    Initializer* globalData;
     CardDeck     cardDeck; 
     GameLogic    gameLogic;
+    Initializer* globalData = Initializer::getInstance();
 
     vector<shared_ptr<Player>> playerList;
     vector<pair<float, float>> cardPositions;
@@ -100,19 +101,11 @@ private:
 
 // =================================================================================================
 
-
-// Construct function is used instead of the constructor because of the order of initialization.
-GameTable::GameTable(Initializer & globalData) {
-    construct(globalData);
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::construct(Initializer & globalData) {
-    this->cardDeck = CardDeck(globalData);
-    this->globalData = &globalData;
-    this->numberOfPlayers = globalData.numberOfPlayers;
-    this->font = globalData.defaultFont;        
+void GameTable::construct() {
+    this->cardDeck = CardDeck();
+    this->gameLogic = GameLogic();
+    this->numberOfPlayers = globalData->numberOfPlayers;
+    this->font = globalData->defaultFont;        
     verifyNumberOfPlayers();
     generatePlayers();
     dealCardsToPlayers();
@@ -293,10 +286,10 @@ void GameTable::listen_ForMouseClicks() {
         listener_PlusClick(mouseX, mouseY);
         listener_MinusClick(mouseX, mouseY);
 
-        sf::Vector2i mousePos = sf::Mouse::getPosition(globalData->window);
-        sf::Vector2f worldPos = globalData->window.mapPixelToCoords(mousePos);
-
         // For configuring / debugging
+
+        // sf::Vector2i mousePos = sf::Mouse::getPosition(globalData->window);
+        // sf::Vector2f worldPos = globalData->window.mapPixelToCoords(mousePos);
         // cout << "Left mouse button clicked @ {" << sf::Mouse::getPosition(globalData->window).x  
         //      << ", " << sf::Mouse::getPosition(globalData->window).y << "} - View conversion: {" 
         //      << worldPos.x << ", " << worldPos.y << "}" << endl;
@@ -313,6 +306,7 @@ void GameTable::listen_ForMouseClicks() {
 bool GameTable::leftClick() {
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && !buttonIsHeld) {
         buttonIsHeld = true;
+        // cout << "GameTable Left click" << endl;
         return true;
     }
     return false;
@@ -448,6 +442,7 @@ void GameTable::draw_DeckSizeNumbers() {
 // -------------------------------------------------------------------------------------------------
 
 void GameTable::gameTableLoop() {
+        gameLogic.gameLogicLoop();
         listen_ForMouseClicks();
         listener_MenuEventMonitor();
         listener_WindowResized();

@@ -19,22 +19,34 @@ public:
 	EventHandler(sf::RenderWindow & window);
 
 	void listen();
+	sf::Event event;
 
 	bool mouseRelease = false;
+	bool mouseRelease2 = false;
+	bool joystickButtonHeld = false;
+	bool mouseButtonIsHeld = false;
+	bool keyboardButtonHeld = false;
+
 	bool windowResized = false;
 
 	unsigned int screenWidth = 0;
 	unsigned int screenHeight = 0;
 
+	short getJoystickButtonPressed(short joystickNumber);
+	short getMouseButtonPressed();
+	short getKeyboardButtonPressed();
+
 private:
 
 	sf::RenderWindow* window;
-	sf::Event 	 	  event;
 	Joystick 		  joystick;
 
-	void mouseButton();
+	string mouseButton();
 	void closeWindow();
 	void resizeWindow();
+
+	vector<bool> joystickButtonPresses = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	vector<bool> mouseButtonPresses = {0, 0, 0, 0, 0}; // Left, Right, Middle, X1, X2
 };
 
 
@@ -58,49 +70,93 @@ void EventHandler::listen() {
 				resizeWindow();
 				break;
 			case sf::Event::MouseButtonPressed:
-				mouseButton();
 				break;
 			case sf::Event::MouseButtonReleased:
 				// cout << "Released!" << endl;
 				mouseRelease = true;
+				mouseRelease2 = true;
+				mouseButtonIsHeld = false;
 				break;		
 			case sf::Event::MouseWheelMoved:
-				cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
+				// cout << "Mouse wheel Scroll:" << event.mouseWheel.delta << endl;
 				break;	
 			case sf::Event::MouseMoved:
 				// cout << "Mouse position: {" << event.mouseMove.x << ", " << event.mouseMove.y << "}" << endl;
 				break;
+			case sf::Event::JoystickButtonReleased:
+				// cout << "Joystick button was released!!!" << endl;
+				joystickButtonHeld = false;
+				break;
+			case sf::Event::KeyReleased:
+				keyboardButtonHeld = false;
+				break;
 			default:
 				break;
 		}	
-
-		joystick.joystickActions(0);
-		joystick.joystickActions(1);
 	}
 }
 
 // -------------------------------------------------------------------------------------------------
 
 // When a mouse button is pressed (any button), this performs an action based on which button.
-void EventHandler::mouseButton() {
-	switch(event.key.code) {
-		case sf::Mouse::Left:
-			// cout << "Mouse LEFT" << endl;
-			break;
-		case sf::Mouse::Right:
-			cout << "Mouse RIGHT" << endl;
-			break;
-		case sf::Mouse::Middle:
-			cout << "Mouse MIDDLE" << endl;
-			break;
-		case sf::Mouse::XButton1:
-			cout << "Mouse XButton1" << endl;
-			break;
-		case sf::Mouse::XButton2:
-			cout << "Mouse XButton2" << endl;
-			break;
+short EventHandler::getMouseButtonPressed() {
+
+	if(mouseButtonIsHeld) return -1;
+
+	mouseButtonPresses    = {0, 0, 0, 0, 0};
+	mouseButtonPresses[0] = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+	mouseButtonPresses[1] = sf::Mouse::isButtonPressed(sf::Mouse::Right);
+	mouseButtonPresses[2] = sf::Mouse::isButtonPressed(sf::Mouse::Middle);
+
+	for(short i = 0; i < mouseButtonPresses.size(); i++) {
+		if(mouseButtonPresses[i]) {
+			mouseButtonIsHeld = true;
+			return i;
+		}
 	}
+
+	return -1;
 }	
+
+// -------------------------------------------------------------------------------------------------
+
+short EventHandler::getJoystickButtonPressed(short joystickNumber) {
+    for(short i = 0; i < joystickButtonPresses.size(); i++) {
+        joystickButtonPresses[i] = sf::Joystick::isButtonPressed(joystickNumber, i);
+        if(joystickButtonPresses[i] && !joystickButtonHeld) {
+			joystickButtonHeld = true;
+			return i;
+        }
+    };
+
+	return -1;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+short EventHandler::getKeyboardButtonPressed() {
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 0;
+	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 1;
+	}	
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad0) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 2;
+	}	
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) && !keyboardButtonHeld) {
+		keyboardButtonHeld = true;
+		return 3;
+	}			
+
+	return -1;
+};
 
 // -------------------------------------------------------------------------------------------------
 
