@@ -18,19 +18,20 @@ using namespace std;
 class GameTable {
 public:
 
-    GameTable() {}
-    GameTable(Initializer & globalData);
+    GameTable() {
+        construct();
+    }
 
     short numberOfPlayers = 0;
 
-    void construct(Initializer & globalData);
+    void construct();
     void gameTableLoop();
 
 private:
 
-    Initializer* globalData;
     CardDeck     cardDeck; 
     GameLogic    gameLogic;
+    Initializer* globalData = Initializer::getInstance();
 
     vector<shared_ptr<Player>> playerList;
     vector<pair<float, float>> cardPositions;
@@ -100,20 +101,11 @@ private:
 
 // =================================================================================================
 
-
-// Construct function is used instead of the constructor because of the order of initialization.
-GameTable::GameTable(Initializer & globalData) {
-    construct(globalData);
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void GameTable::construct(Initializer & globalData) {
-    this->globalData = &globalData;
-    this->cardDeck = CardDeck(globalData);
-    this->gameLogic = GameLogic(globalData);
-    this->numberOfPlayers = globalData.numberOfPlayers;
-    this->font = globalData.defaultFont;        
+void GameTable::construct() {
+    this->cardDeck = CardDeck();
+    this->gameLogic = GameLogic();
+    this->numberOfPlayers = globalData->numberOfPlayers;
+    this->font = globalData->defaultFont;        
     verifyNumberOfPlayers();
     generatePlayers();
     dealCardsToPlayers();

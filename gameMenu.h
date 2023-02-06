@@ -7,19 +7,25 @@
 using namespace std;
 
 #include "initializer.h"
+#include "miscellaneous.h"
 
 class GameMenu {
 public: 
 
-    GameMenu() {}
-    GameMenu(Initializer & globalData);
+    GameMenu() {
+        set_GearMenuIcon();
+        set_AllMenuItemPositions();
+        set_GameSpeedSelector();
+        set_VolumeBars();
+        set_CardStyleColorBoxes();
+    }
 
     void gameMenuLoop();
     void updateNumberOfPlayersText(short number);
 
 private:
 
-    Initializer* globalData;
+    Initializer* globalData = Initializer::getInstance();
 
     bool soundVolumeWasAdjusted = false;
     bool buttonIsHeld = true;
@@ -149,18 +155,6 @@ private:
 
 
 // =================================================================================================
-
-
-GameMenu::GameMenu(Initializer & globalData) {
-    this->globalData = &globalData;
-    set_GearMenuIcon();
-    set_AllMenuItemPositions();
-    set_GameSpeedSelector();
-    set_VolumeBars();
-    set_CardStyleColorBoxes();
-}
-
-// -------------------------------------------------------------------------------------------------
 
 void GameMenu::gameMenuLoop() {
     listen_ForMouseClicks();

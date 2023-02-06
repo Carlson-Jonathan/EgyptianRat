@@ -16,25 +16,12 @@ using namespace std;
 
 class Initializer {
 public:
-
-	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "Egyptian Rat | by Jonathan Carlson"), 
-					eventHandler(window), 
-					view(sf::Vector2f(screenWidth / 2.f, screenHeight / 2.f), sf::Vector2f(screenWidth, screenHeight)) {		
-						
-		window.setFramerateLimit(frameRate);
-
-		// Set background texture
-		// background.setTexture(textures.textures["sample2"]);  
-		// background.setOrigin(0, 0);	
-
-		// Play song
-		// gameSound.loadAndPlayMusic(defaultMusic);
-		setFontFamily();
-		setScreenCenter();
-	}
+	Initializer(const Initializer& obj) = delete; // This is now a singleton
 
     //----------------------------------------------------------------------------------------------
 
+	string test = "";
+	
 	unsigned int screenWidth  = 600;
 	unsigned int screenHeight = 700;
 	pair<float, float> screenCenter = {};
@@ -61,11 +48,34 @@ public:
 	EventHandler   eventHandler;
 	TextureManager textures;
 
+    static Initializer* getInstance() {
+    	if(!instancePtr)                       
+            instancePtr = new Initializer();
+        return instancePtr;
+    }
+
 	void setScreenCenter() {
 		this->screenCenter = {screenWidth / 2.f, screenHeight / 2.f};
 	}
 
 private:
+	Initializer() : window(sf::VideoMode(screenWidth, screenHeight), "Egyptian Rat | by Jonathan Carlson"), 
+					eventHandler(window), 
+					view(sf::Vector2f(screenWidth / 2.f, screenHeight / 2.f), sf::Vector2f(screenWidth, screenHeight)) {		
+						
+		window.setFramerateLimit(frameRate);
+
+		// Set background texture
+		// background.setTexture(textures.textures["sample2"]);  
+		// background.setOrigin(0, 0);	
+
+		// Play song
+		// gameSound.loadAndPlayMusic(defaultMusic);
+		setFontFamily();
+		setScreenCenter();
+	}
+
+	static Initializer* instancePtr;
 
 	void setFontFamily() {
 		if (!this->defaultFont.loadFromFile(this->defaultFontFamily)) {
@@ -75,6 +85,7 @@ private:
 	}
 };
 
+Initializer* Initializer::instancePtr = NULL;
 
 // =================================================================================================
 

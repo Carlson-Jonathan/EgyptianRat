@@ -16,7 +16,7 @@ class Card {
 public:
 
     Card() {}
-    Card(Initializer & globalData, string cardName);
+    Card(string cardName);
     friend Card_Test; // For unit testing
 
     string     cardName;
@@ -28,25 +28,22 @@ public:
 
 private:
 
-    Initializer*     globalData;
+    Initializer* globalData = Initializer::getInstance();
     map<char, short> faceCardValues = {{'j', 11}, {'q', 12}, {'k', 13}, {'a', 14}};
 
     void setCardValue(string cardName);
     void setCardSuite(string cardName);
 };
 
-#endif // CARD_H
-
 
 // =================================================================================================
 
 
-Card::Card(Initializer & globalData, string cardName) {
-    this->globalData = &globalData;
+Card::Card(string cardName) {
     this->cardName = cardName;
 
     cardSprite.setTextureRect(sf::IntRect(0, 0, 100, 145));
-    cardSprite.setTexture(globalData.textures.textures[cardName]);
+    cardSprite.setTexture(globalData->textures.textures[cardName]);
 
     setCardValue(cardName);
     setCardSuite(cardName);
@@ -106,3 +103,5 @@ void Card::setCardSuite(string cardName) {
         exit(139);
     }
 }
+
+#endif // CARD_H

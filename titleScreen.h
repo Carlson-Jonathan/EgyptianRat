@@ -13,14 +13,16 @@ using namespace std;
 class TitleScreen {
 public:
 
-    TitleScreen() {}
-    TitleScreen(Initializer & globalData);
+    TitleScreen() : cardDeck() {
+        set_CardPositions();
+        set_HeadingText();
+    }
 
     void titleScreenLoop();
 
 private:
 
-    Initializer* globalData;
+    Initializer* globalData = Initializer::getInstance();
     CardDeck cardDeck;
     vector<sf::Text> headingTextObjects;
     pair<float, float> firstCardPosition = {225.f, 350.f};
@@ -66,11 +68,6 @@ private:
 // =================================================================================================
 
 
-TitleScreen::TitleScreen(Initializer & globalData) : cardDeck(globalData) {
-    this->globalData = &globalData;
-    set_CardPositions();
-    set_HeadingText();
-}
 
 // -------------------------------------------------------------------------------------------------
 

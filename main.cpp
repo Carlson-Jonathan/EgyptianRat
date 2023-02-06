@@ -14,31 +14,33 @@ using namespace std;
 
 int main() {
 
-	srand(time(NULL)); 		// For seeding the random number generator
-	Initializer globalData;
-	TitleScreen titleScreen (globalData);
-	GameMenu    gameMenu    (globalData);
-	GameTable   gameTable;
+	srand(time(NULL)); // For seeding the random number generator
+	Initializer* globalData = Initializer::getInstance();
+	TitleScreen titleScreen;
+	cout << "\n\nCheckpoint!\n\n";
+	GameMenu gameMenu;
+	GameTable gameTable;
 
-	while(globalData.window.isOpen()) {
-		globalData.eventHandler.listen();
-		globalData.window.clear(sf::Color(0, 90, 0));
 
-		if(globalData.mayInitializeGameTable) {
-			globalData.mayInitializeGameTable = false;
-			gameMenu.updateNumberOfPlayersText(globalData.numberOfPlayers);
-			gameTable.construct(globalData);
+	while(globalData->window.isOpen()) {
+		globalData->eventHandler.listen();
+		globalData->window.clear(sf::Color(0, 90, 0));
+
+		if(globalData->mayInitializeGameTable) {
+			globalData->mayInitializeGameTable = false;
+			gameMenu.updateNumberOfPlayersText(globalData->numberOfPlayers);
+			gameTable.construct();
 		}
 
 		// Toggle between game and menu
-		if(globalData.atTitleScreen)
+		if(globalData->atTitleScreen)
 			titleScreen.titleScreenLoop();
-		else if(globalData.gameMenuIsOpen)
+		else if(globalData->gameMenuIsOpen)
 			gameMenu.gameMenuLoop();
 		else
 			gameTable.gameTableLoop();
 
-		globalData.window.display();
+		globalData->window.display();
 	} 
 
 	return 0;
