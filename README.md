@@ -1,11 +1,10 @@
-<h1>War Card Game</h1>
+<h1>Egyptian Rat (Under Development)</h1>
 
 <b>DESCRIPTION:</b>
-<p>This is a very simple card game that most of us know as "War". Two or more cards are compared. The player who places the highest card wins all lower cards. Acquiring all cards wins the game (I discovered that most 1-on-1 games usually result in an infinite loops and cannot be won). The top left-most card was intended to be the human player, but since there is little more involvement than clicking the card, I decided not to make a big deal about identifying players.</p>
-<p>My purpose in making this game was to study and apply coding architecture techniques. This project is a preamble to other projects I intend work on and  helped me to figure out what kind of code organization works and what does not. After playing the game, you may agree that the settings menu is more fun than the game itself, but making a fun game was not the point. Now that I know how things work, I can move forward and make card games and other genres of games that are actually fun to play while not spending so much time figuring out the logistics and mechanics of the framework. I made an effort to code as cleanly as possible and will admit that this project is a good representation of what anyone can expect of me as a software engineer.</p>
+<p>Starting with my War Card Game project, I am exanding the capabilities to play more complex games. Some of the framework has already been improved but many changes are yet to come.</p>
+
 <b>SCREENSHOTS:</b>
 <br><br>
-<image src="Images/Screenshot.png"></image>
 
 <b>DEPENDENCIES:</b>
 <ul><li>C++ 11</li>
