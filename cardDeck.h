@@ -37,7 +37,7 @@ public:
 
 private:
 
-    short          numberOfCardBacks = 6;
+    short numberOfCardBacks = 6;
     Initializer* globalData = Initializer::getInstance();
     vector<string> cardNames;
 

@@ -17,7 +17,6 @@ int main() {
 	srand(time(NULL)); // For seeding the random number generator
 	Initializer* globalData = Initializer::getInstance();
 	TitleScreen titleScreen;
-	cout << "\n\nCheckpoint!\n\n";
 	GameMenu gameMenu;
 	GameTable gameTable;
 
@@ -43,6 +42,8 @@ int main() {
 		globalData->window.display();
 	} 
 
+	delete globalData;
+	globalData = NULL;
 	return 0;
 }
 
