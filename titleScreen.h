@@ -22,7 +22,6 @@ public:
 
 private:
 
-    Initializer* globalData = Initializer::getInstance();
     CardDeck cardDeck;
     vector<sf::Text> headingTextObjects;
     pair<float, float> firstCardPosition = {225.f, 350.f};

@@ -25,8 +25,6 @@ public:
 
 private:
 
-    Initializer* globalData = Initializer::getInstance();
-
     bool soundVolumeWasAdjusted = false;
     bool buttonIsHeld = true;
 

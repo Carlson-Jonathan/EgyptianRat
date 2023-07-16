@@ -30,8 +30,6 @@ private:
     //    if so, set number of plays for next player
     //
 
-    Initializer* globalData = Initializer::getInstance();
-
     short playRequirement = 0;
     bool  buttonIsHeld = false;
 

@@ -15,7 +15,6 @@ using namespace std;
 int main() {
 
 	srand(time(NULL)); // For seeding the random number generator
-	Initializer* globalData = Initializer::getInstance();
 	TitleScreen titleScreen;
 	cout << "\n\nCheckpoint!\n\n";
 	GameMenu gameMenu;
