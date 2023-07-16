@@ -28,7 +28,6 @@ public:
 
 private:
 
-    Initializer* globalData = Initializer::getInstance();
     map<char, short> faceCardValues = {{'j', 11}, {'q', 12}, {'k', 13}, {'a', 14}};
 
     void setCardValue(string cardName);

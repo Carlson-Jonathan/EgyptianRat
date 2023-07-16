@@ -86,6 +86,7 @@ private:
 };
 
 Initializer* Initializer::instancePtr = NULL;
+Initializer* globalData = Initializer::getInstance();
 
 // =================================================================================================
 

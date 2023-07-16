@@ -31,7 +31,6 @@ private:
 
     CardDeck     cardDeck; 
     GameLogic    gameLogic;
-    Initializer* globalData = Initializer::getInstance();
 
     vector<shared_ptr<Player>> playerList;
     vector<pair<float, float>> cardPositions;
