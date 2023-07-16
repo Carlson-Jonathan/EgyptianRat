@@ -70,7 +70,7 @@ private:
 		// background.setOrigin(0, 0);	
 
 		// Play song
-		// gameSound.loadAndPlayMusic(defaultMusic);
+		gameSound.loadAndPlayMusic(defaultMusic);
 		setFontFamily();
 		setScreenCenter();
 	}

@@ -38,6 +38,7 @@ public:
 private:
 
     short          numberOfCardBacks = 6;
+    short numberOfCardBacks = 6;
     vector<string> cardNames;
 
     void generateCardDeck  ();
