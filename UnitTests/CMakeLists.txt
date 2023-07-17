@@ -1,16 +1,26 @@
 cmake_minimum_required(VERSION 3.10)
-
-project(GameworkFramework)
+project("EgyptianRatUnitTests")
 
 find_package(SFML 2.5 COMPONENTS graphics audio window system network REQUIRED)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
-add_executable(
-	Main.out 
-	testHarness.cpp
-	../miscellaneous.cpp
-	miscellaneous_test.cpp
+add_executable(UnitTests.out testHarness.cpp)
+add_definitions(-DUNIT_TEST_MODE)
+
+add_library(TEST_LIBS STATIC
+    ../Initialize/src/miscellaneous.cpp
+    miscellaneous_test.cpp 
 )
 
-target_link_libraries(Main.out sfml-graphics sfml-audio)
+include_directories(UnitTests.out PUBLIC
+    ../Initialize/headers
+    ../Game/headers
+)
+
+target_link_libraries(UnitTests.out PUBLIC 
+    TEST_LIBS
+    sfml-graphics 
+    sfml-audio
+)

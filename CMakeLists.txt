@@ -1,13 +1,19 @@
 cmake_minimum_required(VERSION 3.10)
-project(EgyptianRat)
+project("EgyptianRat")
 
 find_package(SFML 2.5 COMPONENTS graphics audio window system network REQUIRED)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
-add_library(LIBFILES
-	miscellaneous.cpp
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})     
+set(LIBRARY_OUTPUT_PATH    ${CMAKE_BINARY_DIR}/lib)
+
+add_executable(EgyptianRat.out main.cpp)
+
+add_subdirectory(Initialize)
+add_subdirectory(Game)
+
+target_link_libraries(EgyptianRat.out PUBLIC
+	GAME_LIBS
+	INITIALIZE_LIBS
+	sfml-graphics 
+	sfml-audio
 )
-
-add_executable(Main.out main.cpp)
-
-target_link_libraries(Main.out LIBFILES sfml-graphics sfml-audio)

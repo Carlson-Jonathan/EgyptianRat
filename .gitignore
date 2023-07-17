@@ -39,3 +39,7 @@ Build
 # Other
 .vscode*
 notes.txt
+
+#CMake
+Makefile
+compile.cmake

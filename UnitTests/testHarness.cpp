@@ -8,7 +8,7 @@
 
 using namespace std;
 
-#include "../gameTable.h"
+#include "gameTable.h"
 
 #include "miscellaneous_test.h"
 #include "cardDeck_test.h"
@@ -76,7 +76,6 @@ int main() {
         "GameLogic_Test::setTopCards_test()",
         GameLogic_Test::setTopCards_test()
     ));  
-
 
     //----------------------------------------------------------------------------------------------
 

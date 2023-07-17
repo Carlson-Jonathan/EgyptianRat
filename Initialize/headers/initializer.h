@@ -69,9 +69,11 @@ private:
 		// background.setTexture(textures.textures["sample2"]);  
 		// background.setOrigin(0, 0);	
 
-		// Play song
+		// Some settings are disabled to prevent interference with unit testing.
+		#ifndef UNIT_TEST_MODE
 		gameSound.loadAndPlayMusic(defaultMusic);
 		setFontFamily();
+		#endif // UNIT_TEST_MODE
 		setScreenCenter();
 	}
 
