@@ -1,4 +1,0 @@
-/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/UnitTests/build/CMakeFiles/UnitTests.out.dir
-/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/UnitTests/build/CMakeFiles/TEST_LIBS.dir
-/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/UnitTests/build/CMakeFiles/edit_cache.dir
-/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/UnitTests/build/CMakeFiles/rebuild_cache.dir

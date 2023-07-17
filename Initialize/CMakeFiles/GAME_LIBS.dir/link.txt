@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/libGAME_LIBS.a CMakeFiles/GAME_LIBS.dir/src/placeHolder.cpp.o
-/usr/bin/ranlib ../lib/libGAME_LIBS.a

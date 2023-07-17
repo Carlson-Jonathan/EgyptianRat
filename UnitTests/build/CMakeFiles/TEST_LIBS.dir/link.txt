@@ -1,2 +1,0 @@
-/usr/bin/ar qc lib/libTEST_LIBS.a CMakeFiles/TEST_LIBS.dir/media/jonathan/2TB_Storage_and_Game_Drive/Jon/Programming/CardGames/EgyptianRat/Initialize/src/miscellaneous.cpp.o CMakeFiles/TEST_LIBS.dir/miscellaneous_test.cpp.o
-/usr/bin/ranlib lib/libTEST_LIBS.a
