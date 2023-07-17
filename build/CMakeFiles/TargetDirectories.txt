@@ -1,0 +1,9 @@
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/CMakeFiles/EgyptianRat.out.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/CMakeFiles/edit_cache.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/CMakeFiles/rebuild_cache.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/Initialize/CMakeFiles/INITIALIZE_LIBS.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/Initialize/CMakeFiles/edit_cache.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/Initialize/CMakeFiles/rebuild_cache.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/Game/CMakeFiles/GAME_LIBS.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/Game/CMakeFiles/edit_cache.dir
+/media/jonathan/2TB Storage and Game Drive/Jon/Programming/CardGames/EgyptianRat/build/Game/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../build/lib/libINITIALIZE_LIBS.a CMakeFiles/INITIALIZE_LIBS.dir/src/miscellaneous.cpp.o
+/usr/bin/ranlib ../build/lib/libINITIALIZE_LIBS.a

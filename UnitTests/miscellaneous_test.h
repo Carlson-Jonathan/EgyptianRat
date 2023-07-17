@@ -4,7 +4,7 @@
 #define MISCELLANEOUS_TEST_H
 
 #include <iostream>
-#include "../miscellaneous.h"
+#include "miscellaneous.h"
 #include <set>
 #include <typeinfo>
 #include <vector>
